@@ -1,0 +1,224 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="icon" type="image/png" href="{% static 'images/icons/favicon.png' %}" />
+    
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/iconic/css/material-design-iconic-font.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/linearicons-v1.0.0/icon-font.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/animate/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/animsition/css/animsition.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/daterangepicker/daterangepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/slick/slick.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/MagnificPopup/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/util.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+    <header>
+        <div class="container-menu-desktop">
+            <div class="top-bar">
+                <div class="content-topbar flex-sb-m h-full container">
+                    <div class="left-top-bar">
+                        Free shipping for standard order over $100
+                    </div>
+                    <div class="right-top-bar flex-w h-full">
+                        <a href="#" class="flex-c-m trans-04 p-lr-25">Help & FAQs</a>
+                        <a href="#" class="flex-c-m trans-04 p-lr-25">EN</a>
+                        <a href="#" class="flex-c-m trans-04 p-lr-25">USD</a>
+                        {% if user.id is not None %}
+                        <a href="{% url 'dashboard' %}" class="flex-c-m trans-04 p-lr-25">My Account</a>
+                        <a href="#" class="flex-c-m trans-04 p-lr-25">Welcome {{user.first_name}}</a>
+                        <a href="{% url 'logout' %}" class="flex-c-m trans-04 p-lr-25">Logout</a>
+                        {% else %}
+                        <a href="{% url 'login' %}" class="flex-c-m trans-04 p-lr-25">Login/Signup</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-header-mobile">
+            <div class="logo-mobile">
+                <a href="index-2.html"><img src="{% static 'images/icons/logo-01.png' %}" alt="IMG-LOGO"></a>
+            </div>
+            <div class="wrap-icon-header flex-w flex-r-m m-r-15">
+                <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 js-show-modal-search">
+                    <i class="zmdi zmdi-search"></i>
+                </div>
+                <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart"
+                    data-notify="2">
+                    <i class="zmdi zmdi-shopping-cart"></i>
+                </div>
+                <a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti"
+                    data-notify="0">
+                    <i class="zmdi zmdi-favorite-outline"></i>
+                </a>
+            </div>
+            <div class="btn-show-menu-mobile hamburger hamburger--squeeze">
+                <span class="hamburger-box">
+                    <span class="hamburger-inner"></span>
+                </span>
+            </div>
+        </div>
+
+        <div class="menu-mobile">
+            <ul class="topbar-mobile">
+                <li>
+                    <div class="left-top-bar">Free shipping for standard order over $100</div>
+                </li>
+                <li>
+                    <div class="right-top-bar flex-w h-full">
+                        <a href="#" class="flex-c-m p-lr-10 trans-04">Help & FAQs</a>
+                        <a href="#" class="flex-c-m p-lr-10 trans-04">My Account</a>
+                        <a href="#" class="flex-c-m p-lr-10 trans-04">EN</a>
+                        <a href="#" class="flex-c-m p-lr-10 trans-04">USD</a>
+                    </div>
+                </li>
+            </ul>
+            <ul class="main-menu-m">
+                <li>
+                    <a href="index-2.html">Home</a>
+                    <ul class="sub-menu-m">
+                        <li><a href="index-2.html">Homepage 1</a></li>
+                    </ul>
+                    <span class="arrow-main-menu-m">
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </span>
+                </li>
+                <li><a href="product.html">Shop</a></li>
+                <li><a href="shoping-cart.html" class="label1 rs1" data-label1="hot">Features</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+
+        <div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
+            <div class="container-search-header">
+                <button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
+                    <img src="{% static 'images/icons/icon-close2.png' %}" alt="CLOSE">
+                </button>
+                <form class="wrap-search-header flex-w p-l-15">
+                    <button class="flex-c-m trans-04">
+                        <i class="zmdi zmdi-search"></i>
+                    </button>
+                    <input class="plh3" type="text" name="search" placeholder="Search...">
+                </form>
+            </div>
+        </div>
+    </header>
+    <section style="background-color: #eee;">
+        <div class="container py-5 navnew">
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="card mb-4">
+                <div class="card-body text-center">
+                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                    class="rounded-circle img-fluid" style="width: 150px;">
+                  <h5 class="my-3">{{user.username}}</h5>
+                  <p class="text-muted mb-4">Kinfra 1st Floor , Kozhikkode</p>
+                  <div class="d-flex justify-content-center mb-2">
+                    <button type="button" class="btn btn-outline-primary ms-1">Edit Profile</button>
+                    <button type="button" class="btn btn-outline-primary ms-1">Order History</button>
+                  </div>
+                  <div class="d-flex justify-content-center mb-2">
+                    <a href="{% url 'forgot_password' %}" class="btn btn-outline-primary ms-1">Update Password</a>
+                    <button type="button" class="btn btn-outline-primary ms-1">Change Profile Photo</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-8">
+              <div class="card mb-4">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Full Name</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{user.username}}</p>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Email</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{user.email}}</p>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Phone</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{user.phone_number}}</p>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Address</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{UserProfile.address_line_1}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card mb-4 mb-md-0">
+                    <div class="card-body">
+                      <h5 class="class=my-3">Recent Orders</h5>
+                      <p class="mb-1" style="font-size: .77rem;">Web Design</p>
+                      <div class="progress rounded" style="height: 5px;">
+                        <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
+                          aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <p class="mt-4 mb-1" style="font-size: .77rem;">Website Markup</p>
+                      <div class="progress rounded" style="height: 5px;">
+                        <div class="progress-bar" role="progressbar" style="width: 72%" aria-valuenow="72"
+                          aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <p class="mt-4 mb-1" style="font-size: .77rem;">One Page</p>
+                      <div class="progress rounded" style="height: 5px;">
+                        <div class="progress-bar" role="progressbar" style="width: 89%" aria-valuenow="89"
+                          aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <p class="mt-4 mb-1" style="font-size: .77rem;">Mobile Template</p>
+                      <div class="progress rounded" style="height: 5px;">
+                        <div class="progress-bar" role="progressbar" style="width: 55%" aria-valuenow="55"
+                          aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <p class="mt-4 mb-1" style="font-size: .77rem;">Backend API</p>
+                      <div class="progress rounded mb-2" style="height: 5px;">
+                        <div class="progress-bar" role="progressbar" style="width: 66%" aria-valuenow="66"
+                          aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
