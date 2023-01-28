@@ -80,8 +80,12 @@ def login(request):
         user=auth.authenticate(email=email, password=password)
         
         if user is not None:
-            auth.login(request,user)
-            return redirect('HomePage')
+            if user.is_admin:
+                auth.login(request,user)
+                return redirect('adminpanel')
+            else:
+                auth.login(request,user)
+                return redirect('HomePage')
         else:
             messages.error(request, "Invalid Credentials....")
             return redirect('login')
