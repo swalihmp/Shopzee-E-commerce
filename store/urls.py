@@ -12,5 +12,6 @@ urlpatterns = [
     path('contact',views.contact,name='contact'),
     path('about',views.about,name='about'),
     path('blog',views.blog,name='blog'),
+    path('submit_review/<int:id>/',views.submit_review,name='submit_review'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

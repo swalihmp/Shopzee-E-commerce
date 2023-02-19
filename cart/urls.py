@@ -8,8 +8,13 @@ urlpatterns=[
     path('wishlist',views.wishlist,name='wishlist'),
     path('addtocart/<int:id>',views.addtocart,name='addtocart'),
     path('addtowish/<int:id>',views.addtowish,name='addtowish'),
-    path('cartinc/<int:id>',views.cartinc,name='cartinc'),
-    path('cartdic/<int:id>',views.cartdic,name='cartdic'),
-     path('remove/<int:id>',views.remove,name='remove'),
+    path('cartinc',views.cartinc,name='cartinc'),
+    path('cartdic',views.cartdic,name='cartdic'),
+    path('addressload',views.addressload,name='addressload'),
+    
+    path('remove/<int:id>',views.remove,name='remove'),
+    path('removewish/<int:id>',views.removewish,name='removewish'),
+    path('checkout',views.checkout,name='checkout'),
+    path('apply_coupon',views.apply_coupon,name='apply_coupon'),
        
 ]

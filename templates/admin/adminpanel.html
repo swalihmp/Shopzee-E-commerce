@@ -62,6 +62,7 @@
                 <div class="navbar-nav w-100">
                     <a href="{% url 'adminpanel' %}" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <a href="{% url 'users' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Users</a>
+                    <a href="{% url 'orders' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Orders</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Categories</a>
                         <div class="dropdown-menu bg-transparent border-0">
@@ -74,10 +75,11 @@
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="{% url 'adminproducts' %}" class="dropdown-item">Product List</a>
                             <a href="{% url 'adminaddproduct' %}" class="dropdown-item">Add New Product</a>
+                            <a href="{% url 'productvar' %}" class="dropdown-item">product Variations</a>
                         </div>
                     </div>
-                    <a href="widget.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Add Coupon</a>
-                    <a href="{% url 'slideshow' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Slider Management</a>
+                    <a href="{% url 'addcoupon' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Add Coupon</a>
+                    <a href="{% url 'slideshow' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Banner</a>
                 </div>
             </nav>
         </div>
@@ -118,7 +120,7 @@
                             <i class="fa fa-chart-line fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Today Sale</p>
-                                <h6 class="mb-0">$1234</h6>
+                                <h6 class="mb-0">${{today_total}}</h6>
                             </div>
                         </div>
                     </div>
@@ -127,7 +129,7 @@
                             <i class="fa fa-chart-bar fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Total Sale</p>
-                                <h6 class="mb-0">$1234</h6>
+                                <h6 class="mb-0">${{all_total}}</h6>
                             </div>
                         </div>
                     </div>
@@ -135,8 +137,9 @@
                         <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-chart-area fa-3x text-primary"></i>
                             <div class="ms-3">
-                                <p class="mb-2">Today Revenue</p>
-                                <h6 class="mb-0">$600</h6>
+                                <p class="mb-2">Today Orders</p>
+                                <h6 class="mb-0">${{today_count}}</h6>
+
                             </div>
                         </div>
                     </div>
@@ -144,8 +147,8 @@
                         <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-chart-pie fa-3x text-primary"></i>
                             <div class="ms-3">
-                                <p class="mb-2">Total Revenue</p>
-                                <h6 class="mb-0">$600</h6>
+                                <p class="mb-2">Total Orders</p>
+                                <h6 class="mb-0">${{total_count}}</h6>
                             </div>
                         </div>
                     </div>

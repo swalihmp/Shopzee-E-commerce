@@ -1,0 +1,449 @@
+{% load static %}
+{% load blog_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopzee</title>
+    <link rel="icon" type="image/png" href="{% static 'images/icons/favicon.png' %}" />
+    
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/iconic/css/material-design-iconic-font.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/linearicons-v1.0.0/icon-font.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/animate/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/animsition/css/animsition.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/daterangepicker/daterangepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/slick/slick.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/MagnificPopup/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/util.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    <style>
+        .sbody {
+          text-align: center;
+          padding: 40px 0;
+        }
+        .scard h1 {
+            color: #88B04B;
+            font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+            font-weight: 900;
+            font-size: 30px;
+            margin-bottom: 10px;
+          }
+          .scard p {
+            color: #404F5E;
+            font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+            font-size:20px;
+            margin: 0;
+          }
+        .scheckmark {
+          color: #9ABC66;
+          font-size: 50px;
+          line-height: 100px;
+          margin-left:-15px;
+        }
+        .scard {
+          background: white;
+          padding: 60px;
+          display: inline-block;
+          margin: 0 auto;
+        }
+      </style>
+
+</head>
+
+<body class="animsition">
+    <header>
+        <div class="container-menu-desktop">
+            <div class="top-bar">
+                <div class="content-topbar flex-sb-m h-full container">
+                    <div class="left-top-bar">
+                        Free shipping for standard order over $100
+                    </div>
+                    <div class="right-top-bar flex-w h-full">
+                        <a href="#" class="flex-c-m trans-04 p-lr-25">Help & FAQs</a>
+                        <a href="#" class="flex-c-m trans-04 p-lr-25">EN</a>
+                        <a href="#" class="flex-c-m trans-04 p-lr-25">IND</a>
+                        {% if user.id is not None %}
+                        <a href="{% url 'dashboard' %}" class="flex-c-m trans-04 p-lr-25">My Account</a>
+                        <a href="#" class="flex-c-m trans-04 p-lr-25">Welcome {{user.first_name}}</a>
+                        <a href="{% url 'logout' %}" class="flex-c-m trans-04 p-lr-25">Logout</a>
+                        {% else %}
+                        <a href="{% url 'login' %}" class="flex-c-m trans-04 p-lr-25">Login/Signup</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="menu-mobile">
+            <ul class="topbar-mobile">
+                <li>
+                    <div class="left-top-bar">Free shipping for standard order over $100</div>
+                </li>
+                <li>
+                    <div class="right-top-bar flex-w h-full">
+                        <a href="#" class="flex-c-m p-lr-10 trans-04">Help & FAQs</a>
+                        <a href="#" class="flex-c-m p-lr-10 trans-04">EN</a>
+                        <a href="#" class="flex-c-m p-lr-10 trans-04">IND</a>
+                        {% if user.id is not None %}
+                        <a href="{% url 'dashboard' %}"class="flex-c-m p-lr-10 trans-04">My Account</a>
+                        <a href="#" class="flex-c-m p-lr-10 trans-04">Welcome {{user.first_name}}</a>
+                        <a href="{% url 'logout' %}" class="flex-c-m p-lr-10 trans-04">Logout</a>
+                        {% else %}
+                        <a href="{% url 'login' %}" class="flex-c-m p-lr-10 trans-04">Login/Signup</a>
+                        {% endif %}
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+<div class="bg0  p-b-85">
+
+    <section class="h-100 gradient-custom">
+        <div class="container py-5 h-100">
+          <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-10 col-xl-8">
+              <div class="card" style="border-radius: 10px;">
+                <div class="card-body p-4">
+                  <div class="d-flex justify-content-between align-items-center mb-4">
+                    <p class="lead fw-normal mb-0" style="color: #a8729a;">Invoice</p>
+                    <p class="small text-muted mb-0">Order Number : {{single_order.order_number}}</p>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mb-4">
+                    <p class="lead fw-normal mb-0" style="color: #a8729a;">Payment Details</p>
+                    <p class="small text-muted mb-0">Payment Id : {{single_order.payment.payment_id}}<br>Payment Method : {{single_order.payment.payment_method}}<br>Payment Status : {{single_order.payment.status}}</p>
+                  </div>
+                  {% for product in products %}
+                  
+                  <div class="card shadow-0 border mb-4">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-2">
+                          <img src={{ product.product.images.url }} alt="" class="img-fluid" alt="Phone">
+                        </div>
+                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                          <p class="text-muted mb-0">{{product.product.product_name}}</p>
+                        </div>
+                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                          <p class="text-muted mb-0 small">{{product.color}}</p>
+                        </div>
+                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                          <p class="text-muted mb-0 small">Size : {{product.size}}</p>
+                        </div>
+                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                          <p class="text-muted mb-0 small">Qty: {{product.quantity}}</p>
+                        </div>
+                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                          <p class="text-muted mb-0 small">{{product.product_price}}</p>
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+
+                  {% endfor %}
+                  
+      
+                  <div class="d-flex justify-content-between pt-2">
+                    <p class="fw-bold mb-0">Order Details</p>
+                    <p class="text-muted mb-0"><span class="fw-bold me-4">Total</span> {{single_order.order_total}}</p>
+                  </div>
+      
+                  <div class="d-flex justify-content-between pt-2">
+                    <p class="text-muted mb-0">Order Id : {{single_order.order_number}}</p>
+                    <p class="text-muted mb-0"><span class="fw-bold me-4">Discount</span> 0.00</p>
+                  </div>
+      
+                  <div class="d-flex justify-content-between">
+                    <p class="text-muted mb-0">Order Status : {{single_order.status}}</p>
+                    <p class="text-muted mb-0"><span class="fw-bold me-4">Tax Amount</span>{{single_order.tax}}</p>
+                  </div>
+      
+                  <div class="d-flex justify-content-between mb-5">
+                    <p class="text-muted mb-0">Order Date : {{single_order.created_at}}</p>
+                    <p class="text-muted mb-0"><span class="fw-bold me-4">Delivery Charges</span> Free</p>
+                  </div>
+
+                </div>
+                <div class="card-footer border-0 px-4 py-5"
+                  style="background-color: #a8729a; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                  <h5><label for="" style="color: black;">Delivery Detalis</label></h5>
+             
+                    <label for="first_name" style="color: black;">Name : {{single_order.first_name}}</label>
+                    <label for="last_name" style="color: black;">Phone : {{single_order.phone}}</label>
+                    <label for="company" style="color: black;">Email : {{single_order.user.email}}</label>
+                    <label for="city" style="color: black;">Address : {{single_order.address_line_1}} {{single_order.address_line_2}}</label>
+                    <label for="first_name" style="color: black;">Place : {{single_order.state}} ,
+                      {{single_order.country}} , {{single_order.post_code}}</label>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+</div>
+
+    <footer class="bg3 p-t-75 p-b-32">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-lg-3 p-b-50">
+                    <h4 class="stext-301 cl0 p-b-30">
+                        Categories
+                    </h4>
+                    <ul>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                Women
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                Men
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                Shoes
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                Watches
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-6 col-lg-3 p-b-50">
+                    <h4 class="stext-301 cl0 p-b-30">
+                        Help
+                    </h4>
+                    <ul>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                Track Order
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                Returns
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                Shipping
+                            </a>
+                        </li>
+                        <li class="p-b-10">
+                            <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                                FAQs
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-6 col-lg-3 p-b-50">
+                    <h4 class="stext-301 cl0 p-b-30">
+                        GET IN TOUCH
+                    </h4>
+                    <p class="stext-107 cl7 size-201">
+                        Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call us
+                        on (+91) 9656343725
+                    </p>
+                    <div class="p-t-27">
+                        <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+                            <i class="fa fa-pinterest-p"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-3 p-b-50">
+                    <h4 class="stext-301 cl0 p-b-30">
+                        Newsletter
+                    </h4>
+                    <form>
+                        <div class="wrap-input1 w-full p-b-4">
+                            <input class="input1 bg-none plh1 stext-107 cl7" type="text" name="email"
+                                placeholder="email@example.com">
+                            <div class="focus-input1 trans-04"></div>
+                        </div>
+                        <div class="p-t-18">
+                            <button class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04">
+                                Subscribe
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="p-t-40">
+                <div class="flex-c-m flex-w p-b-18">
+                    <a href="#" class="m-all-1">
+                        <img src="{% static 'images/icons/icon-pay-01.png' %}" alt="ICON-PAY">
+                    </a>
+                    <a href="#" class="m-all-1">
+                        <img src="{% static 'images/icons/icon-pay-02.png' %}" alt="ICON-PAY">
+                    </a>
+                    <a href="#" class="m-all-1">
+                        <img src="{% static 'images/icons/icon-pay-03.png' %}" alt="ICON-PAY">
+                    </a>
+                    <a href="#" class="m-all-1">
+                        <img src="{% static 'images/icons/icon-pay-04.png' %}" alt="ICON-PAY">
+                    </a>
+                    <a href="#" class="m-all-1">
+                        <img src="{% static 'images/icons/icon-pay-05.png' %}" alt="ICON-PAY">
+                    </a>
+                </div>
+                <p class="stext-107 cl6 txt-center">
+
+                    Copyright &copy;
+                    <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is
+                    made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="#"
+                        target="_blank">Shopzee</a>
+
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="btn-back-to-top" id="myBtn">
+        <span class="symbol-btn-back-to-top">
+            <i class="zmdi zmdi-chevron-up"></i>
+        </span>
+    </div>
+
+    
+
+    <script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+
+    <script src="{% static 'vendor/animsition/js/animsition.min.js' %}"></script>
+
+    <script src="{% static 'vendor/bootstrap/js/popper.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <script src="{% static 'vendor/select2/select2.min.js' %}"></script>
+    <script>
+        $(".js-select2").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: 20,
+                dropdownParent: $(this).next('.dropDownSelect2')
+            });
+        })
+    </script>
+
+    <script src="{% static 'vendor/daterangepicker/moment.min.js' %}"></script>
+    <script src="{% static 'vendor/daterangepicker/daterangepicker.js' %}"></script>
+
+    <script src="{% static 'vendor/slick/slick.min.js' %}"></script>
+    <script src="{% static 'js/slick-custom.js' %}"></script>
+
+    <script src="{% static 'vendor/parallax100/parallax100.js' %}"></script>
+    <script>
+        $('.parallax100').parallax100();
+    </script>
+
+    <script src="{% static 'vendor/MagnificPopup/jquery.magnific-popup.min.js' %}"></script>
+    <script>
+        $('.gallery-lb').each(function () { // the containers for all your galleries
+            $(this).magnificPopup({
+                delegate: 'a', // the selector for gallery item
+                type: 'image',
+                gallery: {
+                    enabled: true
+                },
+                mainClass: 'mfp-fade'
+            });
+        });
+    </script>
+
+    <script src="{% static 'vendor/isotope/isotope.pkgd.min.js' %}"></script>
+
+    <script src="{% static 'vendor/sweetalert/sweetalert.min.js' %}"></script>
+    <script>
+        $('.js-addwish-b2').on('click', function (e) {
+            e.preventDefault();
+        });
+
+        $('.js-addwish-b2').each(function () {
+            var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
+            $(this).on('click', function () {
+                swal(nameProduct, "is added to wishlist !", "success");
+
+                $(this).addClass('js-addedwish-b2');
+                $(this).off('click');
+            });
+        });
+
+        $('.js-addwish-detail').each(function () {
+            var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
+
+            $(this).on('click', function () {
+                swal(nameProduct, "is added to wishlist !", "success");
+
+                $(this).addClass('js-addedwish-detail');
+                $(this).off('click');
+            });
+        });
+
+        /*---------------------------------------------*/
+
+        $('.js-addcart-detail').each(function () {
+            var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
+            $(this).on('click', function () {
+                swal(nameProduct, "is added to cart !", "success");
+            });
+        });
+
+    </script>
+
+    <script src="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
+    <script>
+        $('.js-pscroll').each(function () {
+            $(this).css('position', 'relative');
+            $(this).css('overflow', 'hidden');
+            var ps = new PerfectScrollbar(this, {
+                wheelSpeed: 1,
+                scrollingThreshold: 1000,
+                wheelPropagation: false,
+            });
+
+            $(window).on('resize', function () {
+                ps.update();
+            })
+        });
+    </script>
+
+    <script src="{% static 'js/main.js' %}"></script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-23581568-13');
+    </script>
+    <script defer
+        src="https://static.cloudflareinsights.com/beacon.min.js/vaafb692b2aea4879b33c060e79fe94621666317369993"
+        integrity="sha512-0ahDYl866UMhKuYcW078ScMalXqtFJggm7TmlUtp0UlD4eQk0Ixfnm5ykXKvGJNFjLMoortdseTfsRT8oCfgGA=="
+        data-cf-beacon='{"rayId":"78b51acb397585cc","token":"cd0b4b3a733644fc843ef0b185f98241","version":"2022.11.3","si":100}'
+        crossorigin="anonymous"></script>
+</body>
+
+<!-- Mirrored from preview.colorlib.com/theme/cozastore/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 18 Jan 2023 06:00:03 GMT -->
+
+</html>

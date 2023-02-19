@@ -1,9 +1,12 @@
 from django.shortcuts import render,redirect
 from .forms import RegistrationForm
-from .models import Account
+from .models import Account, UserProfile ,Address
+from cart.models import Cart,Wishlist
+from orders.models import Order,OrderProduct
 from django.contrib import messages,auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+import os
 
 
 from django.contrib.sites.shortcuts import get_current_site
@@ -13,6 +16,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 # Create your views here.
+
 
 def register(request):
     if request.method == 'POST':
@@ -100,8 +104,146 @@ def logout(request):
 
 @login_required(login_url = 'login')
 def dashboard(request):
-    return render(request, 'accounts/dashboard.html')
+    user = request.user
+    profile=UserProfile.objects.get(user=user)
+    addresses = Address.objects.filter(profile=profile)
+    
+    user_name = user.username
+    items=Cart.objects.filter(user=user_name)
+    item_count = items.count()
+    
+    witems=Wishlist.objects.filter(user=user_name)
+    witem_count = witems.count()
+    
+    
+    total =0
+    for i in range(len(items)):
+        x = items[i].product.price*items[i].quantity
+        total = total+x
+        
+    orders = Order.objects.filter(user=request.user).order_by('-id')
+    
+    context={
+        'profile':profile,
+        'addresses':addresses,
+        'item_count':item_count,
+        'items':items,
+        'total':total,
+        'witem_count':witem_count,
+        'witems':witems,
+        'orders' : orders,
+    }
+    
+    return render(request, 'accounts/dashboard.html',context)
 
+
+@login_required(login_url = 'login')
+def editprofile(request):
+    if request.user.is_authenticated:
+        user = request.user
+        single_user = UserProfile.objects.get(user=user)
+        if request.method == 'POST':
+            if not request.FILES.get('profile_picture'):
+                ex1 = Account.objects.filter(email=request.user.email).update(
+                    first_name = request.POST['first_name'],
+                    last_name = request.POST['last_name'],
+                    username = request.POST['username'],
+                    phone_number = request.POST['phone_number'],
+                )
+                return redirect('dashboard')
+            else:
+                single_user.profile_picture = request.FILES['profile_picture']
+                single_user.save()
+                ex1 = Account.objects.filter(email=request.user.email).update(
+                    first_name = request.POST['first_name'],
+                    last_name = request.POST['last_name'],
+                    username = request.POST['username'],
+                    phone_number = request.POST['phone_number'],
+                )
+                return redirect('dashboard')
+        else :
+            user = request.user
+            profile=UserProfile.objects.get(user=user)
+            addresses = Address.objects.filter(profile=profile)
+            
+            user_name = user.username
+            items=Cart.objects.filter(user=user_name)
+            item_count = items.count()
+            
+            witems=Wishlist.objects.filter(user=user_name)
+            witem_count = witems.count()
+            
+            
+            total =0
+            for i in range(len(items)):
+                x = items[i].product.price*items[i].quantity
+                total = total+x
+                
+            
+            context={
+                'profile':profile,
+                'addresses':addresses,
+                'item_count':item_count,
+                'items':items,
+                'total':total,
+                'witem_count':witem_count,
+                'witems':witems,
+            }
+            
+            return render(request, 'accounts/editprofile.html',context)
+    else:
+        return redirect('login')
+
+
+
+@login_required(login_url = 'login')
+def add_address(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            user = request.user
+            profile=UserProfile.objects.get(user=user)
+            Address.objects.create(
+                profile = profile,
+                address_line_1 = request.POST['address_line_1'],
+                address_line_2 = request.POST['address_line_2'],
+                name = request.POST['first_name'],
+                phone = request.POST['phone'],
+                city = request.POST['city'],
+                state = request.POST['state'],
+                country = request.POST['country'],
+                zip_code = request.POST['zip_code'],
+            )
+            return redirect('dashboard')
+        else :
+            user = request.user
+            profile=UserProfile.objects.get(user=user)
+            addresses = Address.objects.filter(profile=profile)
+            
+            user_name = user.username
+            items=Cart.objects.filter(user=user_name)
+            item_count = items.count()
+            
+            witems=Wishlist.objects.filter(user=user_name)
+            witem_count = witems.count()
+            
+            
+            total =0
+            for i in range(len(items)):
+                x = items[i].product.price*items[i].quantity
+                total = total+x
+                
+            
+            context={
+                'profile':profile,
+                'addresses':addresses,
+                'item_count':item_count,
+                'items':items,
+                'total':total,
+                'witem_count':witem_count,
+                'witems':witems,
+            }
+            return render(request, 'accounts/add_address.html',context)
+    return redirect('login')
 
 def forgot_password(request):
     if request.method == 'POST':
@@ -163,3 +305,43 @@ def resetpassword(request):
             return redirect('resetpassword')
     else:
         return render(request, 'accounts/resetpassword.html')
+    
+def change_password(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            oldpass=request.POST['oldpass']
+            password=request.POST['password']
+            password1=request.POST['password1']
+            
+            user = Account.objects.get(username__exact=request.user.username)
+
+            success = user.check_password(oldpass)
+            if success:
+                if password == password1:
+                    user.set_password(password)
+                    user.save()
+                    messages.success(request, 'Password Change Completed')
+                    auth.logout(request)
+                    return redirect('login')
+                    
+                else:
+                    messages.success(request,'Passwords Must Be Same...')
+                    return render(request,'accounts/changepassword.html')
+            else:
+                messages.error(request, "Invalid Old Password....")
+                return render(request,'accounts/changepassword.html')
+        else:
+            return render(request,'accounts/changepassword.html')
+    else:
+        return redirect('login')
+
+
+def invoice(request,id):
+    single_order = Order.objects.get(id=id)
+    ordered_products = OrderProduct.objects.filter(order_id=single_order.id)
+    
+    context ={
+        'single_order': single_order,
+        'products':ordered_products,
+    }
+    return render(request,'accounts/invoice.html',context)

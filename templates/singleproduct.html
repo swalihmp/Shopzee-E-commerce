@@ -9,9 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopzee</title>
     <link rel="icon" type="image/png" href="{% static 'images/icons/favicon.png' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/d210d73aa3.js" crossorigin="anonymous"></script>
     
     <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
     <link rel="stylesheet" href="{% static 'fonts/iconic/css/material-design-iconic-font.min.css' %}">
     <link rel="stylesheet" href="{% static 'fonts/linearicons-v1.0.0/icon-font.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendor/animate/animate.css' %}">
@@ -24,6 +25,43 @@
     <link rel="stylesheet" href="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.css' %}">
     <link rel="stylesheet" href="{% static 'css/util.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    <style>
+        .rate input{
+            display: none;
+        }
+
+        .rate{
+            display: inline-block;
+            border: 0;
+        }
+        .rate label{
+            float: right;
+        }
+        .rate label::before{
+            display: inline-block;
+            size: 1.5rem;
+            font-family: FontAwesome;
+            content: "\f005";
+            margin: 0;
+            padding: 0.3rem .2rem;
+            cursor: pointer;
+        }
+
+        .rate .half::before{
+            content: "\f089";
+            position: absolute;
+            padding-right: 0;
+        }
+
+        input:checked ~ label, label:hover ~ label{
+            color: #ffb503;
+        }
+
+        input:checked + label:hover, input:checked ~ label:hover, input:checked ~ label:hover ~ label, label:hover ~ input:checked ~ label{
+            color: #cc9900;
+        }
+    </style>
 
 </head>
 
@@ -38,7 +76,7 @@
                     <div class="right-top-bar flex-w h-full">
                         <a href="#" class="flex-c-m trans-04 p-lr-25">Help & FAQs</a>
                         <a href="#" class="flex-c-m trans-04 p-lr-25">EN</a>
-                        <a href="#" class="flex-c-m trans-04 p-lr-25">USD</a>
+                        <a href="#" class="flex-c-m trans-04 p-lr-25">IND</a>
                         {% if user.id is not None %}
                         <a href="{% url 'dashboard' %}" class="flex-c-m trans-04 p-lr-25">My Account</a>
                         <a href="#" class="flex-c-m trans-04 p-lr-25">Welcome {{user.first_name}}</a>
@@ -54,16 +92,13 @@
                     <h3>Shopzee</h3>
                     <div class="menu-desktop">
                         <ul class="main-menu">
-                            <li class="active-menu"><a href="index-2.html">Home</a>
-                                <ul class="sub-menu">
-                                    <li><a href="index-2.html">Homepage 1</a></li>
-                                </ul>
+                            <li class="active-menu"><a href="{% url 'HomePage' %}">Home</a>
                             </li>
-                            <li><a href="product.html">Shop</a></li>
-                            <li class="label1" data-label1="hot"><a href="shoping-cart.html">Features</a></li>
-                            <li><a href="blog.html">Blog</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="contact.html">Contact</a></li>
+                            <li><a href="{% url 'shop' %}">Shop</a></li>
+                            <li class="label1" data-label1="hot"><a href="#">Features</a></li>
+                            <li><a href="{% url 'blog' %}">Blog</a></li>
+                            <li><a href="{% url 'about' %}">About</a></li>
+                            <li><a href="{% url 'contact' %}">Contact</a></li>
                         </ul>
                     </div>
                     <div class="wrap-icon-header flex-w flex-r-m">
@@ -74,8 +109,8 @@
                             data-notify={{item_count}}>
                             <i class="zmdi zmdi-shopping-cart"></i>
                         </div>
-                        <a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"  
-                            data-notify="0"><i class="zmdi zmdi-favorite-outline"></i>
+                        <a href="{% url 'wishlist' %}" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"  
+                            data-notify={{witem_count}}><i class="zmdi zmdi-favorite-outline"></i>
                         </a>
                     </div>
                 </nav>
@@ -93,8 +128,7 @@
                     data-notify={{item_count}}>
                     <i class="zmdi zmdi-shopping-cart"></i>
                 </div>
-                <a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti"
-                    data-notify="0">
+                <a href="{% url 'wishlist' %}" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" data-notify={{witem_count}}>
                     <i class="zmdi zmdi-favorite-outline"></i>
                 </a>
             </div>
@@ -113,27 +147,27 @@
                 <li>
                     <div class="right-top-bar flex-w h-full">
                         <a href="#" class="flex-c-m p-lr-10 trans-04">Help & FAQs</a>
-                        <a href="#" class="flex-c-m p-lr-10 trans-04">My Account</a>
                         <a href="#" class="flex-c-m p-lr-10 trans-04">EN</a>
                         <a href="#" class="flex-c-m p-lr-10 trans-04">IND</a>
+                        {% if user.id is not None %}
+                        <a href="{% url 'dashboard' %}"class="flex-c-m p-lr-10 trans-04">My Account</a>
+                        <a href="#" class="flex-c-m p-lr-10 trans-04">Welcome {{user.first_name}}</a>
+                        <a href="{% url 'logout' %}" class="flex-c-m p-lr-10 trans-04">Logout</a>
+                        {% else %}
+                        <a href="{% url 'login' %}" class="flex-c-m p-lr-10 trans-04">Login/Signup</a>
+                        {% endif %}
                     </div>
                 </li>
             </ul>
             <ul class="main-menu-m">
                 <li>
-                    <a href="">Home</a>
-                    <ul class="sub-menu-m">
-                        <li><a href="#">Homepage 1</a></li>
-                    </ul>
-                    <span class="arrow-main-menu-m">
-                        <i class="fa fa-angle-right" aria-hidden="true"></i>
-                    </span>
+                    <a href="{% url 'HomePage' %}">Home</a>
                 </li>
-                <li><a href="#">Shop</a></li>
+                <li><a href="{% url 'shop' %}">Shop</a></li>
                 <li><a href="#" class="label1 rs1" data-label1="hot">Features</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="{% url 'blog' %}">Blog</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
             </ul>
         </div>
 
@@ -170,14 +204,14 @@
                         </div>
                         <div class="header-cart-item-txt p-t-8">
                             <a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">{{items.product.product_name}}</a>
-                            <span class="header-cart-item-info">1 x ${{items.product.price}}</span>
+                            <span class="header-cart-item-info">{{items.quantity}} x ${{items.product.price}}</span>
                         </div>
                     </li>
                     {% endfor %}
                 </ul>
                 <div class="w-full">
                     <div class="header-cart-total w-full p-tb-40">
-                        Total: $75.00
+                        Total: ${{total}}
                     </div>
                     <div class="header-cart-buttons flex-w w-full">
                         <a href="{% url 'cart' %}"
@@ -193,15 +227,14 @@
             </div>
         </div>
     </div>
+    
 
     <div class="container">
 		<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
 		</div>
 	</div>
-
-
-
-
+    <form action="{% url 'addtocart' product.id %}" method="POST" >
+        {% csrf_token %}
 
         <div class="container">
             <div class="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent">
@@ -215,33 +248,17 @@
                                 <div class="wrap-slick3-dots"></div>
                                 <div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
                                 <div class="slick3 gallery-lb">
-                                    <div class="item-slick3" data-thumb="images/product-detail-01.jpg">
+                                    {% for multiple in multiple %}
+                                    <div class="item-slick3" data-thumb={{ multiple.image.url }}>
                                         <div class="wrap-pic-w pos-relative">
-                                            <img src={{ product.images.url }} alt="IMG-PRODUCT">
+                                            <img src={{ multiple.image.url }} alt="IMG-PRODUCT">
                                             <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                                                href={{ product.images.url }}>
+                                                href={{ multiple.image.url }}>
                                                 <i class="fa fa-expand"></i>
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="item-slick3" data-thumb="images/product-detail-02.jpg">
-                                        <div class="wrap-pic-w pos-relative">
-                                            <img src={{ product.images.url }} alt="IMG-PRODUCT">
-                                            <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                                                href={{ product.images.url }}>
-                                                <i class="fa fa-expand"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="item-slick3" data-thumb="images/product-detail-03.jpg">
-                                        <div class="wrap-pic-w pos-relative">
-                                            <img src={{ product.images.url }} alt="IMG-PRODUCT">
-                                            <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                                                href="{% static 'images/product-detail-03.jpg' %}">
-                                                <i class="fa fa-expand"></i>
-                                            </a>
-                                        </div>
-                                    </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -253,6 +270,9 @@
                             </h4>
                             <span class="mtext-106 cl2">
                                 ${{product.price}}
+                                <a href="{% url 'addtowish' product.id %}" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5   
+                                    p-tb-2 js-addwish-detail tooltip100" data-tooltip="Add to Wishlist"><i class="zmdi zmdi-favorite"></i>
+                                </a>
                             </span>
                             <p class="stext-102 cl3 p-t-23">
                                 Nulla eget sem vitae eros pharetra viverra. Nam vitae luctus ligula. Mauris consequat
@@ -295,44 +315,172 @@
                                                 <i class="fs-16 zmdi zmdi-minus"></i>
                                             </div>
                                             <input class="mtext-104 cl3 txt-center num-product" type="number"
-                                                name="num-product" value="1">
+                                                name="quantity" id="quantity" value="1">
                                             <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
                                                 <i class="fs-16 zmdi zmdi-plus"></i>
                                             </div>
                                         </div>
-                                        <a href="{% url 'addtocart' product.id %}" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15">
-                                            Add to cart 
-                                        </a>
+                                        <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15" type="submit">Add to cart</button>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="flex-w flex-m p-l-100 p-t-40 respon7">
-                                <div class="flex-m bor9 p-r-10 m-r-11">
-                                    <a href="#"
-                                        class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100"
-                                        data-tooltip="Add to Wishlist">
-                                        <i class="zmdi zmdi-favorite"></i>
-                                    </a>
-                                </div>
-                                <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                                    data-tooltip="Facebook">
-                                    <i class="fa fa-facebook"></i>
-                                </a>
-                                <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                                    data-tooltip="Twitter">
-                                    <i class="fa fa-twitter"></i>
-                                </a>
-                                <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                                    data-tooltip="Google Plus">
-                                    <i class="fa fa-google-plus"></i>
-                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </form>
+
+
+<section class="sec-product-detail bg0 p-b-60">
+	<div class="container">
+        <div class="bor10 m-t-50 p-t-43 p-b-40">
+
+            <div class="tab01">
+
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item p-b-10">
+                        <a class="nav-link active" data-toggle="tab" href="#description" role="tab">Review</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content p-t-43">
+
+                    <div class="tab-pane fade show active" id="description" role="tabpanel">
+                        <div class="col-sm-10 col-md-8 col-lg-8 m-lr-auto">
+                            <div class="p-b-30 m-lr-15-sm">
+
+                                {% for review in reviews %}
+
+                                <div class="flex-w flex-t p-b-68">
+                                    <div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
+                                        <img src="{% static '/images/avatar-01.jpg' %}" alt="AVATAR">
+                                    </div>
+                                    <div class="size-207">
+                                        <div class="flex-w flex-sb-m p-b-17">
+                                            <span class="mtext-107 cl2 p-r-20">
+                                                {{review.user.first_name}}
+                                            </span>
+
+                                            <span class="fs-18 cl11">
+                                                <i class="fa fa-star{% if review.rating == 0.5 %}-half-o{% elif review.rating < 1 %}-o {% endif %}" aria-hidden="true"></i>
+                                                <i class="fa fa-star{% if review.rating == 1.5 %}-half-o{% elif review.rating < 2 %}-o {% endif %}" aria-hidden="true"></i>
+                                                <i class="fa fa-star{% if review.rating == 2.5 %}-half-o{% elif review.rating < 3 %}-o {% endif %}" aria-hidden="true"></i>
+                                                <i class="fa fa-star{% if review.rating == 3.5 %}-half-o{% elif review.rating < 4 %}-o {% endif %}" aria-hidden="true"></i>
+                                                <i class="fa fa-star{% if review.rating == 4.5 %}-half-o{% elif review.rating < 5 %}-o {% endif %}" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                        <p class="stext-102 cl6">
+                                            {{review.subject}}
+                                        </p>
+                                        <p class="stext-102 cl6">
+                                            {{review.reviews}}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {% endfor %}
+
+                                <form class="w-full" method="POST" action="{% url 'submit_review' product.id %}">
+                                    {% csrf_token %}
+                                    <h5 class="mtext-108 cl2 p-b-7">
+                                        Add a review
+                                    </h5>
+                                    <p class="stext-102 cl6">
+                                        Your email address will not be published. Required fields are marked *
+                                    </p>
+                                    <div class="flex-w flex-m p-t-50 p-b-23">
+                                        <label>
+                                            Your Rating :
+                                        </label>
+                                        <div class="rate">
+                                            <input type="radio" name="rating" id="rating10" value="5" required/><label for="rating10" title="5"></label>
+                                            <input type="radio" name="rating" id="rating9" value="4.5" required/><label for="rating9" title="4.5" class="half"></label>
+                                            <input type="radio" name="rating" id="rating8" value="4" required /><label for="rating8" title="4"></label>
+                                            <input type="radio" name="rating" id="rating7" value="3.5" required /><label for="rating7" title="3.5" class="half"></label>
+                                            <input type="radio" name="rating" id="rating6" value="3" required /><label for="rating6" title="3"></label>
+                                            <input type="radio" name="rating" id="rating5" value="2.5" required /><label for="rating5" title="2.5" class="half"></label>
+                                            <input type="radio" name="rating" id="rating4" value="2" required /><label for="rating4" title="2"></label>
+                                            <input type="radio" name="rating" id="rating3" value="1.5" required /><label for="rating3" title="1.5" class="half"></label>
+                                            <input type="radio" name="rating" id="rating2" value="1" required /><label for="rating2" title="1"></label>
+                                            <input type="radio" name="rating" id="rating1" value="0.5" required /><label for="rating1" title="0.5" class="half"></label>
+                                        </div>
+                                    </div>
+                                    <div class="row p-b-25">
+                                        <div class="col-sm-12 p-b-5">
+                                            <label class="stext-102 cl3" for="subject">Subject</label>
+                                            <input class="size-111 bor8 stext-102 cl2 p-lr-20" id="subject"
+                                                type="text" required  name="subject">
+                                        </div>
+                                        <div class="col-12 p-b-5">
+                                            <label class="stext-102 cl3" for="review">Your review</label>
+                                            <textarea class="size-110 bor8 stext-102 cl2 p-lr-20 p-tb-10"
+                                                id="reviews" name="reviews" required></textarea>
+                                        </div>
+                                    </div>
+                                    {% if user.is_authenticated %}
+                                        {% if orderproduct %}
+                                            <button type="submit"
+                                                class="flex-c-m stext-101 cl0 size-112 bg7 bor11 hov-btn3 p-lr-15 trans-04 m-b-10">
+                                                Submit
+                                            </button>
+                                        {% else %}
+                                            <p>You Must Purchase This Product To Post A Review.
+                                        {% endif %}
+                                    {% else  %}
+                                        <p>You Must Be Logged In To Post A Review. <span><a href="{% url 'login' %}">Login now</a></span>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="sec-relate-product bg0 p-t-45 p-b-105">
+    <div class="container">
+        <div class="p-b-45">
+            <h3 class="ltext-106 cl5 txt-center">
+                Related Products
+            </h3>
+        </div>
+
+        <div class="wrap-slick2">
+            <div class="slick2">
+                {% for items in similar %}
+                <div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
+                    <div class="block2">
+                        <div class="block2-pic hov-img0">
+                            <img src={{ items.images.url }} alt="IMG-PRODUCT">
+                            <a href="{% url 'addtocart' items.id %}"
+                                class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15">
+                                Add to Cart
+                            </a>
+                        </div>
+                        <div class="block2-txt flex-w flex-t p-t-14">
+                            <div class="block2-txt-child1 flex-col-l ">
+                                <a href="{% url 'singleproduct' items.id %}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                                    {{ items.product_name }}
+                                </a>
+                                <span class="stext-105 cl3">
+                                    ₹{{ items.price }}
+                                </span>
+                            </div>
+                            <div class="block2-txt-child2 flex-r p-t-3">
+                                <a href="{% url 'addtowish' items.id %}" class="btn-addwish-b2 dis-block pos-relative">
+                                    <img class="icon-heart1 dis-block trans-04" src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
 
     <footer class="bg3 p-t-75 p-b-32">
         <div class="container">

@@ -70,15 +70,23 @@ class Account(AbstractBaseUser):
 
 class UserProfile(models.Model):
     user=models.OneToOneField(Account,on_delete=models.CASCADE)
-    address_line_1=models.CharField(blank=True,max_length=100)
-    address_line_2=models.CharField(blank=True,max_length=100)
-    profile_picture=models.ImageField(blank=True,upload_to='UserProfile')
-    city=models.CharField(blank=True,max_length=20)
-    state=models.CharField(blank=True,max_length=20)
-    country=models.CharField(blank=True,max_length=20)
+    profile_picture=models.ImageField(default='avatar.png',upload_to='UserProfile')
+
     
     def __str__(self):
         return self.user.first_name
     
     def full_address(self):
         return f'(self.address_line_1)(self.address_line_2)'
+    
+class Address(models.Model):
+    profile = models.ForeignKey(UserProfile,on_delete=models.CASCADE)
+    address_line_1=models.CharField(blank=True,max_length=100)
+    address_line_2=models.CharField(blank=True,max_length=100)
+    name = models.CharField(blank=True,max_length=100)
+    city=models.CharField(blank=True,max_length=20)
+    state=models.CharField(blank=True,max_length=20)
+    country=models.CharField(blank=True,max_length=20)
+    zip_code = models.CharField(blank=True,max_length=10)
+    phone = models.CharField(max_length=12)
+    

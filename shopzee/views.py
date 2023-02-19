@@ -5,6 +5,9 @@ from cart.models import Cart , Wishlist
 
 # Create your views here.
 
+# def custom_404(request, exception=None):
+#     return render(request, '404.html')
+
 def HomePage(request):
     products = Product.objects.all().filter(is_available=True)
     slider = Slider.objects.all()
@@ -22,7 +25,6 @@ def HomePage(request):
         x = items[i].product.price*items[i].quantity
         total = total+x
         
-    
     context = {
         'item_count':item_count,
         'products':products,
@@ -34,3 +36,5 @@ def HomePage(request):
     }
     return render(request,'index.html',context)
 
+def page404(request, exception):
+    return render(request, '404.html')

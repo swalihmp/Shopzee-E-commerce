@@ -39,7 +39,7 @@
                     <div class="right-top-bar flex-w h-full">
                         <a href="#" class="flex-c-m trans-04 p-lr-25">Help & FAQs</a>
                         <a href="#" class="flex-c-m trans-04 p-lr-25">EN</a>
-                        <a href="#" class="flex-c-m trans-04 p-lr-25">USD</a>
+                        <a href="#" class="flex-c-m trans-04 p-lr-25">IND</a>
                         {% if user.id is not None %}
                         <a href="{% url 'dashboard' %}" class="flex-c-m trans-04 p-lr-25">My Account</a>
                         <a href="#" class="flex-c-m trans-04 p-lr-25">Welcome {{user.first_name}}</a>
@@ -55,16 +55,13 @@
                     <h3>Shopzee</h3>
                     <div class="menu-desktop">
                         <ul class="main-menu">
-                            <li class="active-menu"><a href="index-2.html">Home</a>
-                                <ul class="sub-menu">
-                                    <li><a href="index-2.html">Homepage 1</a></li>
-                                </ul>
+                            <li class="active-menu"><a href="{% url 'HomePage' %}">Home</a>
                             </li>
-                            <li><a href="product.html">Shop</a></li>
-                            <li class="label1" data-label1="hot"><a href="shoping-cart.html">Features</a></li>
-                            <li><a href="blog.html">Blog</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="contact.html">Contact</a></li>
+                            <li><a href="{% url 'shop' %}">Shop</a></li>
+                            <li class="label1" data-label1="hot"><a href="#">Features</a></li>
+                            <li><a href="{% url 'blog' %}">Blog</a></li>
+                            <li><a href="{% url 'about' %}">About</a></li>
+                            <li><a href="{% url 'contact' %}">Contact</a></li>
                         </ul>
                     </div>
                     <div class="wrap-icon-header flex-w flex-r-m">
@@ -75,8 +72,8 @@
                             data-notify={{item_count}}>
                             <i class="zmdi zmdi-shopping-cart"></i>
                         </div>
-                        <a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"  
-                            data-notify="0"><i class="zmdi zmdi-favorite-outline"></i>
+                        <a href="{% url 'wishlist' %}" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"  
+                            data-notify={{witem_count}}><i class="zmdi zmdi-favorite-outline"></i>
                         </a>
                     </div>
                 </nav>
@@ -94,8 +91,7 @@
                     data-notify={{item_count}}>
                     <i class="zmdi zmdi-shopping-cart"></i>
                 </div>
-                <a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti"
-                    data-notify="0">
+                <a href="{% url 'wishlist' %}" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" data-notify={{witem_count}}>
                     <i class="zmdi zmdi-favorite-outline"></i>
                 </a>
             </div>
@@ -114,27 +110,27 @@
                 <li>
                     <div class="right-top-bar flex-w h-full">
                         <a href="#" class="flex-c-m p-lr-10 trans-04">Help & FAQs</a>
-                        <a href="#" class="flex-c-m p-lr-10 trans-04">My Account</a>
                         <a href="#" class="flex-c-m p-lr-10 trans-04">EN</a>
                         <a href="#" class="flex-c-m p-lr-10 trans-04">IND</a>
+                        {% if user.id is not None %}
+                        <a href="{% url 'dashboard' %}"class="flex-c-m p-lr-10 trans-04">My Account</a>
+                        <a href="#" class="flex-c-m p-lr-10 trans-04">Welcome {{user.first_name}}</a>
+                        <a href="{% url 'logout' %}" class="flex-c-m p-lr-10 trans-04">Logout</a>
+                        {% else %}
+                        <a href="{% url 'login' %}" class="flex-c-m p-lr-10 trans-04">Login/Signup</a>
+                        {% endif %}
                     </div>
                 </li>
             </ul>
             <ul class="main-menu-m">
                 <li>
-                    <a href="">Home</a>
-                    <ul class="sub-menu-m">
-                        <li><a href="#">Homepage 1</a></li>
-                    </ul>
-                    <span class="arrow-main-menu-m">
-                        <i class="fa fa-angle-right" aria-hidden="true"></i>
-                    </span>
+                    <a href="{% url 'HomePage' %}">Home</a>
                 </li>
-                <li><a href="#">Shop</a></li>
+                <li><a href="{% url 'shop' %}">Shop</a></li>
                 <li><a href="#" class="label1 rs1" data-label1="hot">Features</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="{% url 'blog' %}">Blog</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
             </ul>
         </div>
 
@@ -171,14 +167,14 @@
                         </div>
                         <div class="header-cart-item-txt p-t-8">
                             <a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">{{items.product.product_name}}</a>
-                            <span class="header-cart-item-info">1 x ${{items.product.price}}</span>
+                            <span class="header-cart-item-info">{{items.quantity}} x ${{items.product.price}}</span>
                         </div>
                     </li>
                     {% endfor %}
                 </ul>
                 <div class="w-full">
                     <div class="header-cart-total w-full p-tb-40">
-                        Total: $75.00
+                        Total: ${{total}}
                     </div>
                     <div class="header-cart-buttons flex-w w-full">
                         <a href="{% url 'cart' %}"
@@ -195,13 +191,26 @@
         </div>
     </div>
 
+    
     <div class="container">
 		<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
 		</div>
 	</div>
 
-    <form class="bg0 p-t-75 p-b-85">
+    
+    <div class="bg0 p-t-75 p-b-85">
 		<div class="container">
+            {% if not items %}
+            <div style="padding-bottom: 16rem; padding-top: 5rem;">
+                <h2 class="text-center"> Your cart is Empty</h2>
+                <br>
+                <div class="text-center">
+                    <a href="{% url 'shop' %}" class="btn btn-outline-primary">
+                        Continue Shopping</a>
+                </div>
+            </div>
+            {% else  %}
+        
 			<div class="row">
 				<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
 					<div class="m-l-25 m-r--38 m-lr-0-xl">
@@ -221,21 +230,34 @@
 											<img src={{ items.product.images.url }} alt="IMG">
 										</div>
 									</td>
-									<td class="column-2">{{items.product.product_name}}</td>
+									<td class="column-2">
+                                        <a href="{% url 'singleproduct' items.product.id %}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                                            {{ items.product.product_name }}
+                                        </a>
+                                        <p class="stext-104 cl4">
+                                            Color : {{ items.color }}
+                                        </p>
+                                        <p class="stext-104 cl4">
+                                            Size : {{ items.size }}
+                                        </p>
+                                    </td>
 									<td class="column-3">${{items.product.price}}</td>
 									<td class="column-4">
 										<div class="wrap-num-product flex-w m-l-auto m-r-0">
-											<a href="{% url 'cartdic' items.id %}"><div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
+											<a onclick="cartdic({{items.id}})"><div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
 												<i class="fs-16 zmdi zmdi-minus"></i>
 											</div></a>
-											<input class="mtext-104 cl3 txt-center num-product" type="number"
-												name="num-product1" value={{items.quantity}} readonly>
-											<a href="{% url 'cartinc' items.id %}"><div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+											<input class="mtext-104 cl3 txt-center num-product" id="itemqty-{{items.id}}" value="{{items.quantity}}" type="number"
+												name="num-product1" readonly>
+											{% comment %} <a href="{% url 'cartinc' items.id %}" ><div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+												<i class="fs-16 zmdi zmdi-plus"></i>
+											</div></a> {% endcomment %}
+                                            <a onclick="cartinc({{items.id}})"><div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
 												<i class="fs-16 zmdi zmdi-plus"></i>
 											</div></a>
 										</div>
 									</td>
-									<td class="column-5">${{ items.product.price|mul:items.quantity }}</td>
+									<td class="column-5" id="sub_total-{{items.id}}">${{ items.product.price|mul:items.quantity }}</td>
                                     <td>
                                         <div class="fs-35 lh-10 cl2 pointer hov-cl1" style="padding-right: 2rem;">
                                             <a href="{% url 'remove' items.id %}"><i class="zmdi zmdi-delete"></i></a>
@@ -245,20 +267,22 @@
                                 {% endfor %}
 							</table>
 						</div>
+                        <form action="{% url 'apply_coupon' %}" method="POST">
+                        {% csrf_token %}
 						<div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
 							<div class="flex-w flex-m m-r-20 m-tb-5">
-								<input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text"
+								<input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" id="coupon"
 									name="coupon" placeholder="Coupon Code">
-								<div
-									class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
-									Apply coupon
-								</div>
-							</div>
-							<div
-								class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
-								Update Cart
+                                
+                                <button type="submit" class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">Apply coupon</button>
+                                <div style="text-align: center; color:rgb(58, 0, 247); ">
+                                    {% for message in messages %}
+                                    {{ message }}
+                                    {% endfor %}
+                                </div>
 							</div>
 						</div>
+                        </form>
 					</div>
 				</div>
 				<div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
@@ -274,9 +298,10 @@
 								</span>
 							</div>
 							<div class="size-209">
-								<span class="mtext-110 cl2">
+                                <input class="mtext-110 cl2" id="total" value="{{total}}" readonly>
+								{% comment %} <span class="mtext-110 cl2" id="total" value="{{total}}">
 									${{total}}
-								</span>
+								</span> {% endcomment %}
 							</div>
 						</div>
 						<div class="flex-w flex-t bor12 p-t-15 p-b-30">
@@ -312,19 +337,19 @@
 								</span>
 							</div>
 							<div class="size-209 p-t-1">
-								<span class="mtext-110 cl2">
-									$79.65
-								</span>
+                                <input class="mtext-110 cl2" id="gtotal" value="{{total}}" readonly>
+								{% comment %} <span class="mtext-110 cl2" id="total" value="{{total}}">
+									${{total}}
+								</span> {% endcomment %}
 							</div>
 						</div>
-						<button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
-							Proceed to Checkout
-						</button>
+                        <a href="{% url 'checkout' %}" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">Proceed to Checkout</a>
 					</div>
 				</div>
 			</div>
+            {% endif %}
 		</div>
-	</form>
+	</div>
 
     <footer class="bg3 p-t-75 p-b-32">
         <div class="container">
@@ -500,7 +525,84 @@
             });
         });
     </script>
+    <script>
+        
+        let total = document.getElementById("total")
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i<cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0,name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        function cartinc(id){
+            let itemqty = document.getElementById(`itemqty-${id}`)
+            let sub_total = document.getElementById(`sub_total-${id}`)
+            var csrftoken = getCookie('csrftoken');
+            var url = "{% url 'cartinc' %}"
+            fetch(url, {
+                method : "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFToken": csrftoken, 
+                },
+                body: JSON.stringify({
+                  id : id,
+                }),
 
+            })
+            .then(response => response.json())
+            .then((res)=>{
+                if(res.data=="true"){
+                    itemqty.value=res.quantity,
+                    total.value=res.total,
+                    gtotal.value=res.total,
+                    sub_total.innerHTML=res.sub_total
+                    //subtotal.innerText=`$${res.quantity*price}`,
+                }
+            })
+
+        }
+
+        function cartdic(id){
+            let sub_total = document.getElementById(`sub_total-${id}`)
+            let itemqty = document.getElementById(`itemqty-${id}`)
+            var csrftoken = getCookie('csrftoken');
+            var url = "{% url 'cartdic' %}"
+            fetch(url, {
+                method : "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFToken": csrftoken, 
+                },
+                body: JSON.stringify({
+                  id : id,
+                }),
+
+            })
+            .then(response => response.json())
+            .then((res)=>{
+                if(res.data=="true"){
+                    itemqty.value=res.quantity,
+                    total.value=res.total,
+                    gtotal.value=res.total,
+                    sub_total.innerHTML=res.sub_total
+                    //subtotal.innerText=`$${res.quantity*price}`,
+                }
+            })
+        }
+    </script>
+
+    
     <script src="{% static 'vendor/isotope/isotope.pkgd.min.js' %}"></script>
 
     <script src="{% static 'vendor/sweetalert/sweetalert.min.js' %}"></script>

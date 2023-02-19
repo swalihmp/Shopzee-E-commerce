@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from.models import Account,UserProfile
+from.models import Account,UserProfile,Address
 from django.utils.html import format_html
 
 # for costomising the passwords in the admin panel
@@ -22,9 +22,10 @@ class UserProfileAdmin(admin.ModelAdmin):
     def thumbnail(self,object):
         return format_html('<img src="{}" width="30" style="border-radius:50%;">'.format(object.profile_picture.url))
     thumbnail.short_discription='profile picture'
-    list_display=('thumbnail','user','state','country')
+    list_display=('thumbnail','user')
     
 
 
 admin.site.register(Account,AccountAdmin)
 admin.site.register(UserProfile,UserProfileAdmin)
+admin.site.register(Address)
