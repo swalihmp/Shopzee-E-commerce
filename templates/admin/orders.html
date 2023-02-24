@@ -125,8 +125,8 @@
                         <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-chart-bar fa-3x text-primary"></i>
                             <div class="ms-3">
-                                <p class="mb-2">Total Users</p>
-                                <h6 class="mb-0">{{user_count}}</h6>
+                                <p class="mb-2">Total Orders</p>
+                                <h6 class="mb-0">{{total_count}}</h6>
                             </div>
                         </div>
                     </div>
@@ -164,15 +164,16 @@
                                     <td>{{order.payment.status}}
                                     <td>{{order.order_number}}</td>
                                     <td>{{order.order_total}}</td>
-                                    <td>{{order.status}}</td>
-                                    <td>
+                                    <td>{{order.status}}
                                         {% if order.status == "New" %}
-                                            <a href="{% url 'change'  order.id 'packed' %}"><button class="btn btn-sm btn-primary" type="button">Packed</button></a>
+                                            <a href="{% url 'change'  order.id 'packed' %}"><button class="btn btn-outline-success m-2" type="button">Packed</button></a>
                                         {% elif order.status == "Packed" %}
-                                            <a href="{% url 'change'  order.id 'shipped' %}"><button class="btn btn-sm btn-primary" type="button">Shipped</button></a>
+                                            <a href="{% url 'change'  order.id 'shipped' %}"><button class="btn btn-outline-success m-2" type="button">Shipped</button></a>
                                         {% elif order.status == "Shipped" %}
-                                            <a href="{% url 'change'  order.id 'deliverd' %}"><button class="btn btn-sm btn-primary" type="button">Deliverd</button></a>  
+                                            <a href="{% url 'change'  order.id 'deliverd' %}"><button class="btn btn-outline-success m-2" type="button">Deliverd</button></a>  
                                         {% endif %}
+                                    </td>
+                                    <td>
                                     <a href="{% url 'order_details' order.id %}"><button class="btn btn-sm btn-primary" type="button">View</button></a>
                                     </td>
                                     {% comment %} <td>View </td> {% endcomment %}

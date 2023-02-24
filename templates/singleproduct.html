@@ -29,6 +29,7 @@
     <style>
         .rate input{
             display: none;
+            size: 5rem;
         }
 
         .rate{
@@ -61,6 +62,7 @@
         input:checked + label:hover, input:checked ~ label:hover, input:checked ~ label:hover ~ label, label:hover ~ input:checked ~ label{
             color: #cc9900;
         }
+
     </style>
 
 </head>
@@ -237,25 +239,19 @@
         {% csrf_token %}
 
         <div class="container">
-            <div class="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent">
-                <button class="how-pos3 hov3 trans-04 js-hide-modal1">
-                    <img src="{% static 'images/icons/icon-close.png' %}" alt="CLOSE">
-                </button>
+            <div class="bg0 p-t-60 p-b-30 p-lr-15-lg">
                 <div class="row">
                     <div class="col-md-6 col-lg-7 p-b-30">
                         <div class="p-l-25 p-r-30 p-lr-0-lg">
                             <div class="wrap-slick3 flex-sb flex-w">
                                 <div class="wrap-slick3-dots"></div>
-                                <div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
                                 <div class="slick3 gallery-lb">
                                     {% for multiple in multiple %}
                                     <div class="item-slick3" data-thumb={{ multiple.image.url }}>
-                                        <div class="wrap-pic-w pos-relative">
-                                            <img src={{ multiple.image.url }} alt="IMG-PRODUCT">
-                                            <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                                                href={{ multiple.image.url }}>
-                                                <i class="fa fa-expand"></i>
-                                            </a>
+                                        <div class="main-image" id="main-image">
+                                            <div class="wrap-pic-w pos-relative">
+                                                <img src={{ multiple.image.url }} alt="IMG-PRODUCT" class="productImage">
+                                            </div>
                                         </div>
                                     </div>
                                     {% endfor %}
@@ -271,14 +267,14 @@
                             <span class="mtext-106 cl2">
                                 ${{product.price}}
                                 <a href="{% url 'addtowish' product.id %}" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5   
-                                    p-tb-2 js-addwish-detail tooltip100" data-tooltip="Add to Wishlist"><i class="zmdi zmdi-favorite"></i>
+                                    p-tb-2 tooltip100" data-tooltip="Add to Wishlist"><i class="zmdi zmdi-favorite"></i>
                                 </a>
                             </span>
                             <p class="stext-102 cl3 p-t-23">
                                 Nulla eget sem vitae eros pharetra viverra. Nam vitae luctus ligula. Mauris consequat
                                 ornare feugiat.Nulla eget sem vitae eros pharetra viverra. Nam vitae luctus ligula. Mauris consequat ornare feugiat.
                             </p>
-
+                            {% if product.stock >= 1 %}
                             <div class="p-t-33">
                                 <div class="flex-w flex-r-m p-b-10">
                                     <div class="size-203 flex-c-m respon6">
@@ -309,21 +305,21 @@
                                     </div>
                                 </div>
                                 <div class="flex-w flex-r-m p-b-10">
-                                    <div class="size-204 flex-w flex-m respon6-next">
-                                        <div class="wrap-num-product flex-w m-r-20 m-tb-10">
-                                            <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-                                                <i class="fs-16 zmdi zmdi-minus"></i>
-                                            </div>
-                                            <input class="mtext-104 cl3 txt-center num-product" type="number"
-                                                name="quantity" id="quantity" value="1">
-                                            <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-                                                <i class="fs-16 zmdi zmdi-plus"></i>
-                                            </div>
-                                        </div>
+                                    <div class="size-204 flex-w flex-m respon6-next" style="padding-bottom: 3rem;">
                                         <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15" type="submit">Add to cart</button>
                                     </div>
                                 </div>
                             </div>
+                            {% else %}
+                            
+                            <div class="p-t-33">
+                                <div class="flex-w flex-r-m p-b-10">
+                                    <div class="size-204 flex-w flex-m respon6-next" style="padding-bottom: 3rem;">
+                                        <p class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15">Not Enough Stock</p>
+                                    </div>
+                                </div>
+                            </div>    
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -419,18 +415,19 @@
                                         </div>
                                     </div>
                                     {% if user.is_authenticated %}
-                                        {% if orderproduct %}
+                                        {% if orderproduct and order_product.order.status == "Delivered" %}
                                             <button type="submit"
                                                 class="flex-c-m stext-101 cl0 size-112 bg7 bor11 hov-btn3 p-lr-15 trans-04 m-b-10">
                                                 Submit
                                             </button>
                                         {% else %}
-                                            <p>You Must Purchase This Product To Post A Review.
+                                            <p>You Must Purchase and Get Delivered This Product To Post A Review.
                                         {% endif %}
                                     {% else  %}
                                         <p>You Must Be Logged In To Post A Review. <span><a href="{% url 'login' %}">Login now</a></span>
                                     {% endif %}
                                 </form>
+
                             </div>
                         </div>
                     </div>
@@ -454,9 +451,9 @@
                     <div class="block2">
                         <div class="block2-pic hov-img0">
                             <img src={{ items.images.url }} alt="IMG-PRODUCT">
-                            <a href="{% url 'addtocart' items.id %}"
+                            <a href="{% url 'singleproduct' items.id %}"
                                 class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15">
-                                Add to Cart
+                                Quick View
                             </a>
                         </div>
                         <div class="block2-txt flex-w flex-t p-t-14">
@@ -612,6 +609,28 @@
             <i class="zmdi zmdi-chevron-up"></i>
         </span>
     </div>
+    <script>
+        const imagWrap = document.getElementById('main-image');
+        const productimages = document.querySelectorAll(".productImage")
+        imagWrap.addEventListener('mousemove', function (e){
+            const x = e.clientX - e.target.offsetLeft;
+            const y = e.clientY - e.target.offsetTop;
+            productimages.forEach(Image=>{
+                Image.style.transformOrigin = `${x}px ${y}px`;
+                Image.style.transform = 'scale(2)'
+            })
+            
+        })
+        imagWrap.addEventListener('mouseleave', () => {
+            productimages.forEach(Image=>{
+                Image.style.transformOrigin = 'center';
+                Image.style.transform = 'scale(1)';
+            })
+            
+        })
+    </script>
+
+    
 
 
     <script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>

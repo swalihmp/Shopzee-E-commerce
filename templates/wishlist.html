@@ -269,10 +269,14 @@
                                             </div>
                                         </div>
                                     </td>
-
                                     <td>
+                                        {% if witems.product.stock >= 1 %}
                                         <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15" 
                                          type="submit">Add to cart</button>
+                                         {% else %}
+                                         <p class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15" 
+                                         type="submit">No Stock</p>
+                                         {% endif %}
                                         {% comment %} <a href="{% url 'addtocart' witems.product.id %}"
                                         class="flex-c-m stext-101 cl0 size-100 bg3 bor14 hov-btn3 trans-04 pointer">
                                         Add to Cart

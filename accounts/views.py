@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 import os
 
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -122,6 +124,9 @@ def dashboard(request):
         total = total+x
         
     orders = Order.objects.filter(user=request.user).order_by('-id')
+    paginator = Paginator(orders,3)
+    page = request.GET.get('page')
+    paged_orders = paginator.get_page(page)
     
     context={
         'profile':profile,
@@ -131,7 +136,7 @@ def dashboard(request):
         'total':total,
         'witem_count':witem_count,
         'witems':witems,
-        'orders' : orders,
+        'orders' : paged_orders,
     }
     
     return render(request, 'accounts/dashboard.html',context)

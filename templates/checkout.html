@@ -9,7 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopzee</title>
-    <link rel="icon" type="image/png" href="{% static 'images/icons/favicon.png' %}" />
+    <link rel="icon" type="image/png" href="{% static 'images/icons/favicon.png' %}"/>
     
     <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
@@ -216,32 +216,14 @@
                         </div>
 
                         <div class="row" style="padding-bottom: 1rem;">
-
-                            <table class="table">
-                                <thead>
-                                  <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Address</th>
-                                    <th scope="col">Phone</th>
-                                    <th scope="col">City</th>
-                                  </tr>
-                                </thead>
-                                
+                            <div style="padding-left: 2rem;">
                                 {% for address in addresses %}
-                                <tbody>
-                                  <tr>
-                                    <td>{{forloop.counter}}
-                                    <th>{{address.name}}</th>
-                                    <td>{{address.address_line_1}} , {{address.address_line_2}}</td>
-                                    <td>{{address.phone}}</td>
-                                    <td>{{address.city}}</td>
-                                    <td><a onclick="addressload({{address.id}})">Load</a></td>
-                                  </tr>
-                                </tbody>
+                                <input class="form-check-input" onclick="addressload({{address.id}})" type="radio" name="payment" value="{{address.name}}">
+                                <label class="form-check-label" for="COD">
+                                    {{address.name}} , {{address.address_line_1}} , {{address.address_line_2}}
+                                </label>
                                 {% endfor %}
-                                
-                            </table> 
+                            </div>
                         </div>
                         {% endif %}
 
@@ -253,41 +235,41 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="first_name">Address Line 1 <span>*</span></label>
-                                    <input type="text" class="form-control" name="address_line_1" id="address_line_1" required>
+                                    <input type="text" class="form-control" name="address_line_1" id="address_line_1" value="" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="last_name">Address Line 2<span>*</span></label>
-                                    <input type="text" class="form-control" name="address_line_2" value="" required>
+                                    <input type="text" class="form-control" name="address_line_2" id="address_line_2" value="" required>
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="company">Name</label>
-                                    <input type="text" class="form-control" name="first_name" value="">
+                                    <input type="text" class="form-control" name="first_name" id="name" value="">
                                 </div>
                                 
                                 <div class="col-12 mb-3">
                                     <label for="city">Town/City <span>*</span></label>
-                                    <input type="text" class="form-control" name="city" value="">
+                                    <input type="text" class="form-control" name="city" id="city" value="">
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="postcode">Postcode <span>*</span></label>
-                                    <input type="text" class="form-control" name="post_code" value="">
+                                    <input type="text" class="form-control" name="post_code" id="zip_code" value="">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="first_name">State <span>*</span></label>
-                                    <input type="text" class="form-control" name="state" value="" required>
+                                    <input type="text" class="form-control" name="state" id="state" value="" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="last_name">Country <span>*</span></label>
-                                    <input type="text" class="form-control" name="country" value="" required>
+                                    <input type="text" class="form-control" name="country" id="country" value="" required>
                                 </div>
 
                                 <div class="col-12 mb-3">
                                     <label for="city">Phone <span>*</span></label>
-                                    <input type="text" class="form-control" name="phone" value="">
+                                    <input type="text" class="form-control" name="phone" id="phone" value="">
                                 </div>
                                 <div style="padding-left: 2rem;">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="chkd" name="checked">
+                                        <input class="form-check-input" type="checkbox" value="" id="checked" name="checked">
                                         <label class="form-check-label" for="checked">
                                         Save This Address For Later
                                         </label>
@@ -333,7 +315,12 @@
                                   </tr>
                                 {% endfor %}
                                 </tbody>
-                              </table>
+                            </table>
+                                {% for message in messages %}
+                                <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                                    <i class="fa fa-exclamation-circle me-2"></i>Sorry {{prod}} {{ message }}
+                                </div>
+                                {% endfor %}
 
 
 
@@ -364,12 +351,25 @@
 						</div>
                         <div class="flex-w flex-t bor12 p-t-15 p-b-30">
 							<div class="size-208 w-full-ssm">
+								<input class="stext-104 cl2 plh4 size-115 bor13 p-lr-20 m-r-10 m-tb-5" type="text" id="coupon" name="coupon" placeholder="Coupon Code">
+							</div>
+                            <div style="padding-left: 7rem; padding-top: 0.7rem;">
+                                <label onclick="apply_coupon()" class="btn btn-secondary flex-c-m stext-101 cl2 bg8 bor13 hov-btn3 p-lr-15 ">Apply Coupon</label>
+                                
+							    {% comment %} <button onclick="apply_coupon()" class="flex-c-m stext-101 cl2 size-80 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">Apply</button> {% endcomment %}
+                            </div>
+						</div>
+                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+							<p id="coupon_id" class="stext-111 cl6 p-t-2"></p>
+						</div>
+                        <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+							<div class="size-208 w-full-ssm">
 								<span class="stext-110 cl2">
 									Discount :
 								</span>
 							</div>
 							<div class="size-209 p-r-18 p-r-0-sm w-full-ssm">
-								<p class="stext-111 cl6 p-t-2">
+								<p id="amount" name="amount" class="stext-111 cl6 p-t-2">
 									$ 0.00/-
 								</p>
 								
@@ -382,9 +382,10 @@
 								</span>
 							</div>
 							<div class="size-209 p-t-1">
-								<span class="mtext-110 cl2">
+                                <input class="mtext-110 cl2" type="text" id="gtotal" value={{total}} readonly  name="gtotal">
+								{% comment %} <span id="gtotal" name="gtotal" value={{total}} class="mtext-110 cl2">
 									${{total}}
-								</span>
+								</span> {% endcomment %}
 							</div>
 						</div>
                         <div class="flex-w flex-t p-t-27 p-b-33">
@@ -591,6 +592,14 @@
         
         function addressload(id){
             let address_line_1 = document.getElementById("address_line_1")
+            let address_line_2 = document.getElementById("address_line_2")
+            let city = document.getElementById("city")
+            let state = document.getElementById("state")
+            let country = document.getElementById("country")
+            let phone = document.getElementById("phone")
+            let name = document.getElementById("name")
+            let zip_code = document.getElementById("zip_code")
+
             var csrftoken = getCookie('csrftoken');
             var url = "{% url 'addressload' %}"
             fetch(url, {
@@ -606,11 +615,18 @@
             })
             .then(response => response.json())
             .then((res)=>{
-                if(res.data){
+                console.log(res)
+                if(res){
                     address_line_1.value=res.address_line_1
+                    address_line_2.value=res.address_line_2
+                    city.value=res.city
+                    state.value=res.state
+                    country.value=res.country
+                    phone.value=res.phone
+                    zip_code.value=res.zip_code
+                    name.value=res.name
                     //subtotal.innerText=`$${res.quantity*price}`,
                 }
-                console.log(address_line_1)
             })
 
         }
@@ -643,6 +659,56 @@
                 mainClass: 'mfp-fade'
             });
         });
+    </script>
+
+
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i<cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0,name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        function apply_coupon(){
+            let coupon_id = document.getElementById("coupon_id")
+            let amount = document.getElementById("amount")
+            let gtotal = document.getElementById("gtotal")
+            let coupon = document.getElementById("coupon").value
+            var csrftoken = getCookie('csrftoken');
+            var url = "{% url 'apply_coupon' %}"
+            fetch(url, {
+                method : "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFToken": csrftoken, 
+                },
+                body: JSON.stringify({
+                  coupon : coupon,
+                }),
+
+            })
+            .then(response => response.json())
+            .then((res)=>{
+                if(res){
+                    amount.innerHTML = `$ ${res.amount} /-`
+                    coupon_id.innerHTML = `You added ${res.coupon_id}`
+                    //gtotal.innerHTML = `$ ${res.g_total} /-`
+                    gtotal.value = res.g_total
+                    coupon.value = res.coupon_name
+                }
+            })
+
+        }
     </script>
 
     <script src="{% static 'vendor/isotope/isotope.pkgd.min.js' %}"></script>

@@ -36,11 +36,14 @@ def singleproduct(request,id):
     
     try :
         if request.user.is_authenticated:
-            orderproduct = OrderProduct.objects.filter(user=request.user,product_id=single_product.id).exists()
+            orderproduct = OrderProduct.objects.filter(user=request.user,product=single_product).exists()
+            order_product = OrderProduct.objects.filter(user=request.user,product=single_product).first()
         else:
             orderproduct = None
+            order_product = None
     except OrderProduct.DoesNotExist:
         orderproduct = None
+        order_product = None
     
     
     reviews = Review_Rating.objects.filter(product_id=single_product.id,status=True)
@@ -56,6 +59,7 @@ def singleproduct(request,id):
         'multiple':multiple,
         'similar' : similar,
         'orderproduct':orderproduct,
+        'order_product':order_product,
         'reviews':reviews,
     }
     return render(request,'singleproduct.html',context)
@@ -255,7 +259,7 @@ def submit_review(request,id):
             reviews = request.POST['reviews']
             rating = request.POST['rating']
             
-            reviews.update(
+            Review_Rating.objects.filter(user=request.user,product=product).update(
                 subject = subject,
                 reviews = reviews,
                 rating = rating,

@@ -39,8 +39,9 @@ class Order(models.Model):
     tax = models.FloatField()
     status = models.CharField(max_length=20, choices=STATUS,default='New')
     is_ordered = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateField(auto_now=False, auto_now_add=False)
     updated_at = models.DateTimeField(auto_now=True)
+    coupon = models.CharField(default="None",max_length=50)
     
     
     def __str__(self):

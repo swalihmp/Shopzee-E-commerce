@@ -115,80 +115,45 @@
                     </div>
                 </div>
             </nav>
+            
             <!-- Navbar End -->
 
 
-
             <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-bar fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Total Products</p>
-                                <h6 class="mb-0">{{prod_count}}</h6>
-                            </div>
-                        </div>
+            <div class="row g-4">
+            <div class="col-sm-12 col-xl-12">
+                <div class="bg-secondary rounded h-100 p-4">
+                    <h6 class="mb-4">Add New Category</h6>
+                    <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" name="product_name" id="product_name" value="{{ product.product_name }}">
+                        <label for="floatingInput">Product Name</label>
                     </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="description" name="description" value="{{ product.description }}">
+                        <label for="floatingInput">Description</label>
+                    </div>
+                    <div class="mb-3">
+                        <img class="card-img-top" src={{ product.images.url }} alt="" style="width: 150px; height: 180px; padding-bottom: 1rem;">
+                        <label for="formFile" class="form-label">Product Image</label>
+                        <input class="form-control bg-dark" type="file" name="images" id="images">
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="price" name="price" value="{{ product.price }}">
+                        <label for="floatingInput">Price</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="stock" name="stock" value="{{ product.stock }}">
+                        <label for="floatingInput">Stock</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Edit Product</button>
+                    </form>
                 </div>
             </div>
-
-
-            <!-- Recent Sales Start -->
-            <div class="container-fluid pt-4 px-4">
-
-                    <div class="col-12">
-                        <div class="bg-secondary rounded h-100 p-4">
-                            <h6 class="mb-4">All Available Products</h6>
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Id</th>
-                                            <th scope="col">Product Image</th>
-                                            <th scope="col">Product Name</th>
-                                            <th scope="col">Category</th>
-                                            <th scope="col">Stock</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Price</th>
-                                            <th scope="col">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for Product in Products %}
-                                        <tr>
-                                            <td>{{ Product.id }}
-                                            <td><img class="rounded-circle" src={{ Product.images.url }} alt="" style="width: 140px; height: 160px;"></td>
-                                            <td>{{ Product.product_name }}</td>
-                                            <td>{{ Product.category }}</td>
-                                            <td>{{ Product.stock }}</td>
-                                            {% if Product.is_available %}
-                                                <td><p class="text-success">Listed</p></td>
-                                            {% else %}
-                                                <td><p class="text-danger">Un Listed</p></td>
-                                            {% endif %} 
-                                            <td>{{Product.price}}</td>
-                                            <td>
-                                                <a href="{% url 'productsingle' Product.id %}" class="btn btn-outline-info m-2"><i class="fa fa-eye me-2"></i>View</a>
-
-                                                {% if Product.is_available %}
-                                                <a href="{% url 'unlist'  Product.id 'block' %}" class="btn btn-outline-primary m-2"><i class="fa fa-ban me-2"></i>Unlist</a>
-                                                {% else %}
-                                                <a href="{% url 'unlist'  Product.id 'unblock' %}" class="btn btn-outline-success m-2"><i class="fa fa-ban me-2"></i>List</a>
-                                                {% endif %} 
-                                                <a href="{% url 'editprod'  Product.id %}"><button class="btn btn-success m-2" type="button">Edit</button></a>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-
             </div>
-            <!-- Recent Sales End -->
+            </div>
 
 
             

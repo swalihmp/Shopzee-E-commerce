@@ -161,7 +161,7 @@
                                     <td class="align-middle">{{Category.category_name}}</td>
                                     <td>{{ Category.description }}</td>
                                     <td>
-                                    <a href="#"><button class="btn btn-sm btn-primary" type="button">Delete</button></a>
+                                    <a href="{% url 'delcategory'  Category.id %}"><button class="btn btn-sm btn-primary" type="button">Delete</button></a>
                                     <a href="{% url 'editcategory'  Category.id %}"><button class="btn btn-success m-2" type="button">Edit</button></a>
                                     </td>
                                 </tr>

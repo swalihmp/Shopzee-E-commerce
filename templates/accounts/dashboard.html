@@ -25,6 +25,33 @@
   <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+
+    <style>
+    ul.pagination {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+    }
+    
+    ul.pagination li {display: inline;}
+    
+    ul.pagination li a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+    
+    ul.pagination li a.active {
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 5px;
+    }
+    
+    ul.pagination li a:hover:not(.active) {background-color: #ddd;}
+    </style>
 </head>
 <body>
   <header>
@@ -35,15 +62,15 @@
                     Free shipping for standard order over $100
                 </div>
                 <div class="right-top-bar flex-w h-full">
-                    <a href="#" class="flex-c-m trans-04 p-lr-25">Help & FAQs</a>
-                    <a href="#" class="flex-c-m trans-04 p-lr-25">EN</a>
-                    <a href="#" class="flex-c-m trans-04 p-lr-25">IND</a>
+                    <a href="#" class="flex-c-m trans-04 p-lr-25" style="text-decoration: none;">Help & FAQs</a>
+                    <a href="#" class="flex-c-m trans-04 p-lr-25" style="text-decoration: none;">EN</a>
+                    <a href="#" class="flex-c-m trans-04 p-lr-25" style="text-decoration: none;">IND</a>
                     {% if user.id is not None %}
-                    <a href="{% url 'dashboard' %}" class="flex-c-m trans-04 p-lr-25">My Account</a>
-                    <a href="#" class="flex-c-m trans-04 p-lr-25">Welcome {{user.first_name}}</a>
-                    <a href="{% url 'logout' %}" class="flex-c-m trans-04 p-lr-25">Logout</a>
+                    <a href="{% url 'dashboard' %}" class="flex-c-m trans-04 p-lr-25" style="text-decoration: none;">My Account</a>
+                    <a href="#" class="flex-c-m trans-04 p-lr-25" style="text-decoration: none;">Welcome {{user.first_name}}</a>
+                    <a href="{% url 'logout' %}" class="flex-c-m trans-04 p-lr-25" style="text-decoration: none;">Logout</a>
                     {% else %}
-                    <a href="{% url 'login' %}" class="flex-c-m trans-04 p-lr-25">Login/Signup</a>
+                    <a href="{% url 'login' %}" class="flex-c-m trans-04 p-lr-25" style="text-decoration: none;">Login/Signup</a>
                     {% endif %}
                 </div>
             </div>
@@ -53,13 +80,13 @@
                 <h3>Shopzee</h3>
                 <div class="menu-desktop">
                     <ul class="main-menu">
-                        <li class="active-menu"><a href="{% url 'HomePage' %}">Home</a>
+                        <li class="active-menu"><a href="{% url 'HomePage' %}" style="text-decoration: none;">Home</a>
                         </li>
-                        <li><a href="{% url 'shop' %}">Shop</a></li>
-                        <li class="label1" data-label1="hot"><a href="#">Features</a></li>
-                        <li><a href="{% url 'blog' %}">Blog</a></li>
-                        <li><a href="{% url 'about' %}">About</a></li>
-                        <li><a href="{% url 'contact' %}">Contact</a></li>
+                        <li><a href="{% url 'shop' %}" style="text-decoration: none;">Shop</a></li>
+                        <li class="label1" data-label1="hot" style="text-decoration: none;"><a href="#">Features</a></li>
+                        <li><a href="{% url 'blog' %}" style="text-decoration: none;">Blog</a></li>
+                        <li><a href="{% url 'about' %}" style="text-decoration: none;">About</a></li>
+                        <li><a href="{% url 'contact' %}" style="text-decoration: none;">Contact</a></li>
                     </ul>
                 </div>
                 <div class="wrap-icon-header flex-w flex-r-m">
@@ -209,7 +236,6 @@
                   {% endfor %}
                   <div class="d-flex justify-content-center mb-2">
                     <a href="{% url 'editprofile' %}" class="btn btn-outline-primary ms-1">Edit Profile</a>
-                    <button type="button" class="btn btn-outline-primary ms-1 js-show-modal2">Order History</button>
                   </div>
                   <div class="d-flex justify-content-center mb-2">
                     <a href="{% url 'add_address' %}" class="btn btn-outline-primary ms-1">Add Address</a>
@@ -272,7 +298,7 @@
                 <div class="col-md-12">
                   <div class="card mb-4 mb-md-0">
                     <div class="card-body">
-                      <h5 class="class=my-3">Recent Orders</h5>
+                      <h5 class="class=my-3">All Orders</h5>
                       {% if not orders %}
                         <div style="padding-bottom: 1rem; padding-top: 1rem;">
                             <h2 class="text-center"> Your Order List is Empty</h2>
@@ -283,7 +309,7 @@
                             </div>
                         </div>
                         {% else  %}
-                      <table class="table table-dark table-hover">
+                      <table class="table table caption-top">
                         <thead>
                           <tr>
                             <th scope="col">Order Id</th>
@@ -308,9 +334,37 @@
                         {% endfor %}
                       </table>
                       {% endif %}
+                      
+                    </div>
+
+                    <div class="flex-c-m flex-w w-full" style="padding-bottom: 1rem;">
+                        {% if orders.has_other_pages %}
+                        <ul class="pagination">
+                            {% if orders.has_previous %}
+                                <li><a href="?page={{orders.previous_page_number}}">«</a></li>
+                            {% else %}
+                                <li class="disabled"><a href="">«</a></li>
+                            {% endif %}
+        
+                            {% for i in orders.paginator.page_range %}
+                                {% if orders.number == i %}
+                                    <li><a href="#" class="active">{{i}}</a></li>
+                                {% else %}
+                                    <li ><a href="?page={{i}}">{{i}}</a></li>
+                                {% endif %}
+                            {% endfor %}
+        
+                            {% if orders.has_next %}
+                                <li><a href="?page={{orders.next_page_number}}">»</a></li>
+                            {% else %}
+                                <li class="disabled"><a href="#">»</a></li>
+                            {% endif %}
+                        </ul>
+                        {% endif %}
                     </div>
                   </div>
                 </div>
+                
               </div>
             </div>
           </div>
@@ -491,48 +545,6 @@
 		</div>
 	</div>
 
-    <div class="wrap-modal1 js-modal2 p-t-60 p-b-20">
-		<div class="overlay-modal1 js-hide-modal1"></div>
-		<div class="container">
-			<div class="row">
-        <div class="col-md-12">
-          <div class="card mb-4 mb-md-0">
-            <div class="card-body">
-              <h5 class="class=my-3">All Orders</h5>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Address Line 1</th>
-                    <th scope="col">Address Line 2</th>
-                    <th scope="col">City</th>
-                    <th scope="col">State</th>
-                    <th scop="col">Country</th>
-                    <th scop="col">Zip Code</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for address in addresses %}
-                  <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{address.address_line_1}}</td>
-                    <td>{{address.address_line_2}}</td>
-                    <td>{{address.city}}</td>
-                    <td>{{address.state}}</td>
-                    <td>{{address.country}}</td>
-                    <td>{{address.zip_code}}</td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-		</div>
-	</div>
-
-    
     <script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
 
     <script src="{% static 'vendor/animsition/js/animsition.min.js' %}"></script>

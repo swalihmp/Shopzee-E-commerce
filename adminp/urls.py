@@ -15,6 +15,7 @@ urlpatterns = [
     path('addcategory',views.addcategory,name='addcategory'),
     path('productsingle/<int:id>',views.productsingle,name='productsingle'),
     path('editcategory/<int:id>/',views.editcategory,name='editcategory'),
+    path('editprod/<int:id>/',views.editprod,name='editprod'),
     path('slideshow',views.slideshow,name='slideshow'),
     path('deleteslider/<int:id>',views.deleteslider,name='deleteslider'),
     path('addcoupon',views.addcoupon,name='addcoupon'),
@@ -23,6 +24,7 @@ urlpatterns = [
     path('order_details/<int:id>/',views.order_details,name='order_details'),
     path('productvar',views.productvar,name='productvar'),
     path('blockvari/<int:id>/<str:action>/',views.blockvari,name='blockvari'),
+    path('delcategory/<int:id>/',views.delcategory,name='delcategory'),
     
     
 ]

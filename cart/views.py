@@ -7,8 +7,12 @@ from cart.models import Cart , Wishlist
 from store.models import Product
 from adminp.models import Coupon
 from datetime import datetime
+from django.urls import reverse
+from store.views import singleproduct
 import json
 from django.utils import timezone
+
+# from geopy.geocoders import Nominatim
 
 # Create your views here.
 
@@ -86,19 +90,15 @@ def addtocart(request,id):
         if request.method == 'POST':
             color = request.POST['color']
             size = request.POST['size']
-            if 'quantity' in request.POST:
-                quantity = request.POST['quantity']
-            else:
-                quantity = 1
             product = Product.objects.get(id=id)
+            stock = product.stock
             user = request.user
             uid = user.username 
         
             if Cart.objects.filter(product=product,user=uid,color=color,size=size).exists():
                 return redirect('cart')
             else:
-                
-                Cart.objects.create(quantity=quantity,product=product,user=uid,color=color,size=size)
+                Cart.objects.create(product=product,user=uid,color=color,size=size)
                 return redirect('cart')
     else:
         return redirect('login')
@@ -106,34 +106,45 @@ def addtocart(request,id):
 def cartinc(request):
     body = json.loads(request.body)
     qty=Cart.objects.get(id=body['id'])
-    qty.quantity += 1
-    qty.save()
-    str = "true"
-    quantity = qty.quantity
     
-    user = request.user
-    user_name = user.username
-    items=Cart.objects.filter(user=user_name)
+    prod = qty.product
+    if prod.stock > qty.quantity :
+        qty.quantity += 1
+        qty.save()
+        str = "true"
+        quantity = qty.quantity
+        
+        user = request.user
+        user_name = user.username
+        items=Cart.objects.filter(user=user_name)
+        
+        pname = qty.product.product_name
+        product = Product.objects.get(product_name=pname)    
+        sub_total = qty.quantity * product.price
+        
+        
+        
+        total =0
+        for i in range(len(items)):
+            x = items[i].product.price*items[i].quantity
+            total = total+x
+        
+        
+        data = {
+            'total':total,
+            'data': str,
+            'quantity': quantity,
+            'sub_total':sub_total
+        }
+        # return redirect('cart') 
+        return JsonResponse(data)
+    else:
+        
+        data = {
+            'stock' : False
+        }
+        return JsonResponse(data)
     
-    pname = qty.product.product_name
-    product = Product.objects.get(product_name=pname)    
-    sub_total = qty.quantity * product.price
-    
-    
-    
-    total =0
-    for i in range(len(items)):
-        x = items[i].product.price*items[i].quantity
-        total = total+x
-    
-    data = {
-        'total':total,
-        'data': str,
-        'quantity': quantity,
-        'sub_total':sub_total
-    }
-    # return redirect('cart') 
-    return JsonResponse(data)
 
 def cartdic(request):
     body = json.loads(request.body)
@@ -174,9 +185,23 @@ def addressload(request):
         qty=Address.objects.get(id=body['id'])
         
         address_line_1 = qty.address_line_1
-        print(address_line_1)
+        address_line_2 = qty.address_line_2 
+        name = qty.name
+        city = qty.city
+        state = qty.state
+        country = qty.country
+        zip_code = qty.zip_code
+        phone = qty.phone
+        
         data = {
-            'address_line_1' : address_line_1
+            'address_line_1' : address_line_1,
+            'address_line_2' : address_line_2,
+            'name' : name,
+            'city' : city ,
+            'state' : state ,
+            'country' : country ,
+            'zip_code' : zip_code ,
+            'phone' : phone 
         }
         
         return JsonResponse(data)
@@ -216,35 +241,54 @@ def checkout(request):
     return render(request,'checkout.html',context)
 
 def apply_coupon(request):
-    if request.method == 'POST':
-        user = request.user
-        user_name = user.username
-        items=Cart.objects.filter(user=user_name)
-        total =0
-        for i in range(len(items)):
-            x = items[i].product.price*items[i].quantity
-            total = total+x
-        
-        coupon_id = request.POST['coupon']
-        
-        try:
-            coupon = Coupon.objects.get(coupon_id=coupon_id)
-        
-        except Coupon.DoesNotExist:
-            messages.success(request,'Coupon Not Fount')
-            return redirect('cart')
-        else : 
-            date = datetime.now().date()
-            sdate = coupon.activ_date
-            edate = coupon.exp_date
-            minimum = coupon.min_amount
-            users = coupon.allowed_users
-            if ( int(minimum)<int(total) and sdate <= date <= edate and users>0):
-                
-                messages.success(request,'Coupon Fount')
-                return redirect('cart')
-            else:
-                messages.success(request,'Coupon Not Fount')
-                return redirect('cart')
-    else:
-        return redirect('cart')
+    body = json.loads(request.body)
+    
+    user = request.user
+    user_name = user.username
+    items=Cart.objects.filter(user=user_name)
+    total =0
+    for i in range(len(items)):
+        x = items[i].product.price*items[i].quantity
+        total = total+x
+    
+    coupon_id = body['coupon']
+    
+    try:
+        coupon = Coupon.objects.get(coupon_id=coupon_id)
+    
+    except Coupon.DoesNotExist:
+        data ={
+            'coupon_id' : "Coupon Does Not Exist...",
+            'g_total': total,
+            'amount': "0",
+            'coupon_name': ""
+        }
+        return JsonResponse(data)
+    else : 
+        date = datetime.now().date()
+        sdate = coupon.activ_date
+        edate = coupon.exp_date
+        minimum = coupon.min_amount
+        users = coupon.allowed_users
+        if ( int(minimum)<int(total) and sdate <= date <= edate and users>0):
+            
+            amount = coupon.disc_amount
+            coupon_id = coupon.coupon_id
+            g_total = int(total)-int(amount)
+            print(g_total)
+            data ={
+                'amount':amount,
+                'coupon_id': coupon_id,
+                'g_total': g_total,
+                'coupon_name': coupon_id
+            }
+            return JsonResponse(data)
+        else:
+            amount = 0
+            data ={
+                'coupon_id' : "Minimal Cart Value",
+                'g_total': total,
+                'amount': amount,
+                'coupon_name':coupon_id
+            }
+            return JsonResponse(data)
