@@ -57,63 +57,55 @@ def adminpanel(request):
 
 @login_required(login_url = 'login')
 def productvar(request):
-    if request.user.is_authenticated:
-        if request.user.is_superadmin:
-            if request.method == 'POST':
-                pname = request.POST['pname']
-                product = Product.objects.get(product_name=pname)
-                variation_category = request.POST['category']
-                variation_value = request.POST['value']
-                
-                Variation.object.create(
-                    product = product,
-                    variation_category = variation_category,
-                    variation_value = variation_value,
-                )
-                products = Variation.object.all().order_by('id')
-                paginator = Paginator(products,8)
-                page = request.GET.get('page')
-                paged_products = paginator.get_page(page)
-                products = Product.objects.filter(is_available = True)
-                
+    if request.user.is_superadmin:
+        if request.method == 'POST':
+            pname = request.POST['pname']
+            product = Product.objects.get(product_name=pname)
+            variation_category = request.POST['category']
+            variation_value = request.POST['value']
+            
+            Variation.object.create(
+                product = product,
+                variation_category = variation_category,
+                variation_value = variation_value,
+            )
+            products = Variation.object.all().order_by('id')
+            paginator = Paginator(products,8)
+            page = request.GET.get('page')
+            paged_products = paginator.get_page(page)
+            products = Product.objects.filter(is_available = True)
+            
 
-                context = {
-                    'variations': paged_products,
-                    'products': products,
-                }
-                return render(request, 'admin/prodvariation.html',context)
-            else:
-                products = Variation.object.all().order_by('id')
-                paginator = Paginator(products,8)
-                page = request.GET.get('page')
-                paged_products = paginator.get_page(page)
-                products = Product.objects.filter(is_available = True)
-                
-
-                context = {
-                    'variations': paged_products,
-                    'products': products,
-                }
-                return render(request, 'admin/prodvariation.html',context)
+            context = {
+                'variations': paged_products,
+                'products': products,
+            }
+            return render(request, 'admin/prodvariation.html',context)
         else:
-            return redirect('login')
+            products = Variation.object.all().order_by('id')
+            paginator = Paginator(products,8)
+            page = request.GET.get('page')
+            paged_products = paginator.get_page(page)
+            products = Product.objects.filter(is_available = True)
+            
+
+            context = {
+                'variations': paged_products,
+                'products': products,
+            }
+            return render(request, 'admin/prodvariation.html',context)
     else:
         return redirect('login')
 
 
-
-
 @login_required(login_url = 'login')
 def productsingle(request,id):
-    if request.user.is_authenticated:
-        if request.user.is_superadmin:
-            context = {
-                'product': Product.objects.get(id=id),
-                'multiple' : multiimages.objects.filter(product=id),
-            }
-            return render(request, 'admin/productsingle.html',context)
-        else:
-            return redirect('login')
+    if request.user.is_superadmin:
+        context = {
+            'product': Product.objects.get(id=id),
+            'multiple' : multiimages.objects.filter(product=id),
+        }
+        return render(request, 'admin/productsingle.html',context)
     else:
         return redirect('login')
 
