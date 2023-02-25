@@ -246,15 +246,26 @@
                             <div class="wrap-slick3 flex-sb flex-w">
                                 <div class="wrap-slick3-dots"></div>
                                 <div class="slick3 gallery-lb">
-                                    {% for multiple in multiple %}
-                                    <div class="item-slick3" data-thumb={{ multiple.image.url }}>
-                                        <div class="main-image" id="main-image">
-                                            <div class="wrap-pic-w pos-relative">
-                                                <img src={{ multiple.image.url }} alt="IMG-PRODUCT" class="productImage">
+                                    {% if multiple %}
+                                        {% for multiple in multiple %}
+                                        <div class="item-slick3" data-thumb={{ multiple.image.url }}>
+                                            <div class="main-image" id="main-image">
+                                                <div class="wrap-pic-w pos-relative">
+                                                    <img src={{ multiple.image.url }} alt="IMG-PRODUCT" class="productImage">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    {% endfor %}
+                                        {% endfor %}  
+                                    {% else %}
+                                        <div class="item-slick3" data-thumb={{ product.images.url }}>
+                                            <div class="main-image" id="main-image">
+                                                <div class="wrap-pic-w pos-relative">
+                                                    <img src={{ product.images.url }} alt="IMG-PRODUCT" class="productImage">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    
                                 </div>
                             </div>
                         </div>

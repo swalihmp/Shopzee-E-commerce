@@ -79,6 +79,7 @@ def addtowish(request,id):
     else:
         return redirect('login')
     
+@login_required(login_url = 'login')    
 def removewish(request,id):
     wishItem=Wishlist.objects.get(id=id)
     wishItem.delete()
@@ -102,7 +103,8 @@ def addtocart(request,id):
                 return redirect('cart')
     else:
         return redirect('login')
-    
+  
+@login_required(login_url = 'login')  
 def cartinc(request):
     body = json.loads(request.body)
     qty=Cart.objects.get(id=body['id'])
@@ -146,6 +148,7 @@ def cartinc(request):
         return JsonResponse(data)
     
 
+@login_required(login_url = 'login')
 def cartdic(request):
     body = json.loads(request.body)
     qty=Cart.objects.get(id=body['id'])
@@ -179,6 +182,7 @@ def cartdic(request):
     # return redirect('cart') 
     return JsonResponse(data)   
 
+@login_required(login_url = 'login')
 def addressload(request):
     if request.method == 'POST':
         body = json.loads(request.body)
@@ -206,12 +210,13 @@ def addressload(request):
         
         return JsonResponse(data)
 
-
+@login_required(login_url = 'login')
 def remove(request,id):
     cartItem=Cart.objects.get(id=id)
     cartItem.delete()
     return redirect('cart') 
 
+@login_required(login_url = 'login')
 def checkout(request):
     user = request.user
     user_name = user.username
@@ -240,6 +245,7 @@ def checkout(request):
     }
     return render(request,'checkout.html',context)
 
+@login_required(login_url = 'login')
 def apply_coupon(request):
     body = json.loads(request.body)
     

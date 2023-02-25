@@ -196,6 +196,32 @@
 		<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
 		</div>
 	</div>
+    {% if not items %}
+        <div class="container">
+            <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+            </div>
+        </div>
+        <div class="container">
+            <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+            </div>
+        </div>
+        <div class="container">
+            <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+            </div>
+        </div>
+        <div class="container">
+            <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+            </div>
+        </div>
+        <div style="padding-bottom: 16rem; padding-top: 5rem;">
+            <h2 class="text-center"> There Is No Item To Checkout in Your Cart</h2>
+            <br>
+            <div class="text-center">
+                <a href="{% url 'shop' %}" class="btn btn-outline-primary">
+                    Continue Shopping</a>
+            </div>
+        </div>
+    {% else  %}
 
     <form method="POST" action="{% url 'place_order' %}" class="bg0 p-t-75 p-b-85">
         {% csrf_token %}
@@ -420,6 +446,7 @@
 			</div>
 		</div>
 	</form>
+    {% endif %}
 
     <footer class="bg3 p-t-75 p-b-32">
         <div class="container">

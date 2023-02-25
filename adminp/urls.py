@@ -25,6 +25,8 @@ urlpatterns = [
     path('productvar',views.productvar,name='productvar'),
     path('blockvari/<int:id>/<str:action>/',views.blockvari,name='blockvari'),
     path('delcategory/<int:id>/',views.delcategory,name='delcategory'),
+    path('multipleimages',views.multipleimages,name='multipleimages'),
+    path('deleteimg/<int:id>/',views.deleteimg,name='deleteimg'),
     
     
 ]

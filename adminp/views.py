@@ -3,7 +3,7 @@ from django.contrib import messages,auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from accounts.models import Account
-from store.models import Product,Variation,VariationManager
+from store.models import Product,Variation,VariationManager,multiimages
 from category.models import Category
 from .models import Slider,Coupon
 import datetime
@@ -15,6 +15,7 @@ import os
 
 
 
+@login_required(login_url = 'login')
 def adminpanel(request):
     if request.user.is_superadmin:
         current_date = datetime.datetime.now()
@@ -54,61 +55,70 @@ def adminpanel(request):
         return redirect('login')
 
 
-
+@login_required(login_url = 'login')
 def productvar(request):
-    if request.user.is_superadmin:
-        if request.method == 'POST':
-            pname = request.POST['pname']
-            product = Product.objects.get(product_name=pname)
-            variation_category = request.POST['category']
-            variation_value = request.POST['value']
-            
-            Variation.object.create(
-                product = product,
-                variation_category = variation_category,
-                variation_value = variation_value,
-            )
-            products = Variation.object.all().order_by('id')
-            paginator = Paginator(products,8)
-            page = request.GET.get('page')
-            paged_products = paginator.get_page(page)
-            products = Product.objects.filter(is_available = True)
-            
+    if request.user.is_authenticated:
+        if request.user.is_superadmin:
+            if request.method == 'POST':
+                pname = request.POST['pname']
+                product = Product.objects.get(product_name=pname)
+                variation_category = request.POST['category']
+                variation_value = request.POST['value']
+                
+                Variation.object.create(
+                    product = product,
+                    variation_category = variation_category,
+                    variation_value = variation_value,
+                )
+                products = Variation.object.all().order_by('id')
+                paginator = Paginator(products,8)
+                page = request.GET.get('page')
+                paged_products = paginator.get_page(page)
+                products = Product.objects.filter(is_available = True)
+                
 
-            context = {
-                'variations': paged_products,
-                'products': products,
-            }
-            return render(request, 'admin/prodvariation.html',context)
+                context = {
+                    'variations': paged_products,
+                    'products': products,
+                }
+                return render(request, 'admin/prodvariation.html',context)
+            else:
+                products = Variation.object.all().order_by('id')
+                paginator = Paginator(products,8)
+                page = request.GET.get('page')
+                paged_products = paginator.get_page(page)
+                products = Product.objects.filter(is_available = True)
+                
+
+                context = {
+                    'variations': paged_products,
+                    'products': products,
+                }
+                return render(request, 'admin/prodvariation.html',context)
         else:
-            products = Variation.object.all().order_by('id')
-            paginator = Paginator(products,8)
-            page = request.GET.get('page')
-            paged_products = paginator.get_page(page)
-            products = Product.objects.filter(is_available = True)
-            
-
-            context = {
-                'variations': paged_products,
-                'products': products,
-            }
-            return render(request, 'admin/prodvariation.html',context)
+            return redirect('login')
     else:
         return redirect('login')
 
 
 
 
+@login_required(login_url = 'login')
 def productsingle(request,id):
-    if request.user.is_superadmin:
-        context = {
-            'product': Product.objects.get(id=id),
-        }
-        return render(request, 'admin/productsingle.html',context)
+    if request.user.is_authenticated:
+        if request.user.is_superadmin:
+            context = {
+                'product': Product.objects.get(id=id),
+                'multiple' : multiimages.objects.filter(product=id),
+            }
+            return render(request, 'admin/productsingle.html',context)
+        else:
+            return redirect('login')
     else:
         return redirect('login')
 
 
+@login_required(login_url = 'login')
 def adminaddproduct(request):
     if request.user.is_superadmin:
         categories=Category.objects.all()
@@ -146,6 +156,8 @@ def adminaddproduct(request):
     else:
         return redirect('login')
 
+
+@login_required(login_url = 'login')
 def adminproducts(request):
     if request.user.is_superadmin:
         Products=Product.objects.all().order_by('id')
@@ -157,7 +169,10 @@ def adminproducts(request):
         return render(request, 'admin/adminproducts.html',context)
     else:
         return redirect('login')
-
+    
+    
+    
+@login_required(login_url = 'login')
 def category(request):
     if request.user.is_superadmin:
         Categorys=Category.objects.all().order_by('id')
@@ -170,6 +185,9 @@ def category(request):
     else:
         return redirect('login')
 
+
+
+@login_required(login_url = 'login')
 def users(request):
     if request.user.is_superadmin:
         Users=Account.objects.filter(is_admin = False).order_by('id')
@@ -182,6 +200,9 @@ def users(request):
     else:
         return redirect('login')
 
+
+
+@login_required(login_url = 'login')
 def orders(request):
     if request.user.is_superadmin:
         orders = Order.objects.filter(is_ordered = True).order_by('-id')
@@ -194,6 +215,8 @@ def orders(request):
     else:
         return redirect('login')
 
+
+@login_required(login_url = 'login')
 def order_details(request,id):
     if request.user.is_superadmin:
         single_order = Order.objects.get(id=id)
@@ -208,6 +231,8 @@ def order_details(request,id):
         return redirect('login')
 
 
+
+@login_required(login_url = 'login')
 def blockuser(request,id,action):
     if request.user.is_superadmin:
         user=Account.objects.get(id=id)
@@ -222,6 +247,8 @@ def blockuser(request,id,action):
     else:
         return redirect('login')
 
+
+@login_required(login_url = 'login')
 def delcategory(request,id):
     if request.user.is_superadmin:
         cat = Category.objects.get(id=id)
@@ -231,6 +258,7 @@ def delcategory(request,id):
         return redirect('login')
 
 
+@login_required(login_url = 'login')
 def change(request,id,action):
     if request.user.is_superadmin:
         order=Order.objects.get(id=id)
@@ -248,6 +276,8 @@ def change(request,id,action):
     else:
         return redirect('login')
 
+
+@login_required(login_url = 'login')
 def blockvari(request,id,action):
     if request.user.is_superadmin:
         prod=Variation.object.get(id=id)
@@ -263,6 +293,7 @@ def blockvari(request,id,action):
         return redirect('login')
 
 
+@login_required(login_url = 'login')
 def unlist(request,id,action):
     if request.user.is_superadmin:
         product=Product.objects.get(id=id)
@@ -283,6 +314,62 @@ def unlist(request,id,action):
     else:
         return redirect('login')
         
+
+@login_required(login_url = 'login')       
+def multipleimages(request):
+    if request.user.is_superadmin:
+        if request.method == 'POST':
+            product = request.POST['product']
+            image = request.FILES['image']
+            prod = Product.objects.get(product_name=product)
+            
+            multiimages.objects.create(
+                product = prod,
+                image = image,
+            )
+            products = multiimages.objects.all().order_by('id')
+            paginator = Paginator(products,5)
+            page = request.GET.get('page')
+            paged_products = paginator.get_page(page)
+            products = Product.objects.filter(is_available = True)
+            
+
+            context = {
+                'variations': paged_products,
+                'products': products,
+            }
+            return render(request, 'admin/multipleimages.html',context)
+        else:
+            
+
+            products = multiimages.objects.all().order_by('id')
+            paginator = Paginator(products,5)
+            page = request.GET.get('page')
+            paged_products = paginator.get_page(page)
+            products = Product.objects.filter(is_available = True)
+            
+
+            context = {
+                'variations': paged_products,
+                'products': products,
+            }
+            return render(request, 'admin/multipleimages.html',context)
+        
+    else:
+        return redirect('login')
+
+
+@login_required(login_url = 'login')
+def deleteimg(request,id):
+    if request.user.is_superadmin:
+        prod_data = multiimages.objects.get(id=id)
+        prod_data.delete()
+        return redirect('multipleimages')
+    else:
+        return redirect('login')
+
+
+@login_required(login_url = 'login')
 def addcategory(request):
     if request.user.is_superadmin:
         if request.method == 'POST':
@@ -307,6 +394,9 @@ def addcategory(request):
     else:
         return redirect('login')
     
+    
+    
+@login_required(login_url = 'login')    
 def editcategory(request,id):
     if request.user.is_superadmin:
         if request.method == 'POST':
@@ -333,7 +423,9 @@ def editcategory(request,id):
             return render(request,'admin/editcategory.html',context)
     else:
         return redirect('login')
-    
+
+
+@login_required(login_url = 'login')    
 def editprod(request,id):
     if request.user.is_superadmin:
         if request.method == 'POST':
@@ -363,10 +455,10 @@ def editprod(request,id):
             }
             return render(request,'admin/editprod.html',context)   
     else:
-        return redirect('login') 
+        return redirect('login')
     
 
-
+@login_required(login_url = 'login')
 def deleteslider(request,id):
     if request.user.is_superadmin:
         slide_data = Slider.objects.get(id=id)
@@ -377,7 +469,7 @@ def deleteslider(request,id):
 
 
         
-        
+@login_required(login_url = 'login')        
 def slideshow(request):
     if request.user.is_superadmin:
         slides = Slider.objects.all()
@@ -402,8 +494,10 @@ def slideshow(request):
             return render(request,'admin/slideshow.html',context)
     else:
         return redirect('login')
+   
     
- 
+    
+@login_required(login_url = 'login')
 def addcoupon(request):
     if request.user.is_superadmin:
         coupons = Coupon.objects.all()
@@ -440,12 +534,13 @@ def addcoupon(request):
             return render(request,'admin/addcoupon.html',context)   
     else:
         return redirect('login')
-            
+        
 
+@login_required(login_url = 'login')
 def deletecoupon(request,id):
     if request.user.is_superadmin:
         coupon_data = Coupon.objects.get(id=id)
         coupon_data.delete()
         return redirect('addcoupon') 
     else:
-        return redirect('login')      
+        return redirect('login')  

@@ -30,7 +30,6 @@
 
     <!-- Template Stylesheet -->
     <link href="{% static 'admin/css/style.css' %}" rel="stylesheet">
-
     <style>
         ul.pagination {
             display: inline-block;
@@ -101,11 +100,11 @@
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="{% url 'adminproducts' %}" class="dropdown-item">Product List</a>
                             <a href="{% url 'adminaddproduct' %}" class="dropdown-item">Add New Product</a>
-                            <a href="{% url 'productvar' %}" class="dropdown-item active">product Variations</a>
-                            <a href="{% url 'multipleimages' %}" class="dropdown-item">Add Multiple Images</a>
+                            <a href="{% url 'productvar' %}" class="dropdown-item">product Variations</a>
+                            <a href="{% url 'multipleimages' %}" class="dropdown-item active">Add Multiple Images</a>
                         </div>
                     </div>
-                    <a href="{% url 'addcoupon' %}" class="nav-item nav-link "><i class="fa fa-th me-2"></i>Add Coupon</a>
+                    <a href="{% url 'addcoupon' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Add Coupon</a>
                     <a href="{% url 'slideshow' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Banner</a>
                 </div>
             </nav>
@@ -147,11 +146,33 @@
 
             <div class="container-fluid pt-4 px-4">
             <div class="row g-4">
+                <div class="col-sm-12 col-xl-12">
+                    <div class="bg-secondary rounded h-100 p-4">
+                        <h6 class="mb-4">Add New Category</h6>
+                        <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-floating mb-3">
+                            <select class="form-select form-select-sm mb-3" id="product" name="product" required aria-label=".form-select-sm example">
+                                <option disabled selected>Select Product</option>
+                                {% for i in products %}
+                                <option value="{{i.product_name}}">{{i.product_name}}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="floatingInput">Product</label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label">Image</label>
+                            <input class="form-control bg-dark" type="file" required name="image" id="image">
+                        </div>
 
+                        <button type="submit" class="btn btn-primary">Add Image</button>
+                        </form>
+                    </div>
+                </div>
                 <div class="container-fluid pt-4 px-4">
                     <div class="bg-secondary text-center rounded p-4">
                         <div class="d-flex align-items-center justify-content-between mb-4">
-                            <h6 class="mb-0">All Coupons</h6>
+                            <h6 class="mb-0">All Multiple Imgaes</h6>
                             
                         </div>
                         <div class="table-responsive">
@@ -159,9 +180,7 @@
                                 <thead>
                                     <tr class="text-white">
                                         <th scope="col">Product</th>
-                                        <th scope="col">Category</th>
-                                        <th scope="col">Value</th>
-                                        <th scope="col">Status</th>
+                                        <th scope="col">image</th>
                                         <th scop="col">Action</th>
                                     </tr>
                                 </thead>
@@ -169,19 +188,9 @@
                                     {% for variation in variations %}
                                     <tr>
                                         <td class="align-middle">{{variation.product}}</td>
-                                        <td class="align-middle">{{variation.variation_category}}</td>
-                                        <td class="align-middle">{{variation.variation_value}}</td>
-                                        {% if variation.is_active %}
-                                            <td class="text-success">Active</td>
-                                        {% else %}
-                                            <td class="text-danger">Blocked</td>
-                                        {% endif %}
-                                        <td>
-                                        {% if variation.is_active %}
-                                            <a href="{% url 'blockvari'  variation.id 'block' %}"><button class="btn btn-sm btn-primary" type="button">Block</button></a>
-                                        {% else %}
-                                            <a href="{% url 'blockvari'  variation.id 'unblock' %}"><button class="btn btn-success m-2" type="button">Ulblock</button></a>
-                                        {% endif %}
+                                        <td class="align-middle"><img class="product-image" style="height: 7rem;width: 6rem;" src={{variation.image.url}}></td>
+                                        <td class="align-middle">
+                                            <a href="{% url 'deleteimg'  variation.id %}"><button class="btn btn-sm btn-primary" type="button">Delete</button></a>
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -215,41 +224,12 @@
                         </div>
                     </div>
                 </div> 
+            </div>
+            </div>
 
-            <div class="col-sm-12 col-xl-12">
-                <div class="bg-secondary rounded h-100 p-4">
-                    <h6 class="mb-4">Add New Variation</h6>
-                    <form method="POST">
-                        {% csrf_token %}
-                        
-                        <div class="form-floating mb-3">
-                            <select class="form-select form-select-sm mb-3" id="pname" name="pname" required aria-label=".form-select-sm example">
-                                <option disabled selected>Select Product</option>
-                                {% for i in products %}
-                                <option value="{{i.product_name}}">{{i.product_name}}</option>
-                                {% endfor %}
-                            </select>
-                            <label for="floatingInput">Product</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <select class="form-select form-select-sm mb-3" id="category" name="category" required aria-label=".form-select-sm example">
-                                <option disabled selected>Select The Variation category</option>
-                                <option value="color">color</option>
-                                <option value="size">size</option>
-                            </select>
-                            <label for="floatingInput">Variations</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="value" name="value" required>
-                            <label for="floatingInput">Value</label>
-                        </div>
-    
-                        <button type="submit" class="btn btn-primary">Add Variation</button>
-                    </form>
-                </div>
-            </div>
-            </div>
-            </div>
+
+            
+
 
             <!-- Footer Start -->
             <div class="container-fluid pt-4 px-4">
