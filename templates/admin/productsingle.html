@@ -36,14 +36,18 @@
         .product-image {
           padding-top: 1rem;
           padding-left: 2rem;
-          width: 30%;
-          height: 30%%;
+          
         }
   
         .product-description {
           padding: 20px;
           font-size: 16px;
         }
+        .product-images {
+            padding-top: 1rem;
+            padding-left: 2rem;
+            
+          }
         
       </style>
       
@@ -137,16 +141,25 @@
 
         <div>
             <div>
-                <div  class="col-sm-6 col-lg-9 col-xl-9">
-                    {% if multiple %}
-                    {% for multiple in multiple %}
-                    <img class="product-image" src={{multiple.image.url}}>
-                    {% endfor %}
-                    {% else %}
-                        <img class="product-image" src={{product.images.url}} alt="Product Image">
-                    {% endif %}
-                    
-                    
+                <div  class="container d-flex">
+                    <div class="row col-md-12">
+                        <div class="col-md-4">
+                            <img class="product-image img-fluid" src={{product.images.url}} alt="Product Image">
+                        </div>
+
+                        
+                        <div class="col-md-8 d-flex">
+                            <div class="row">
+                                {% for multiple in multiple %}
+                                <div class="col-md-4">
+                                    <img class="product-images img-fluid " src={{multiple.image.url}}>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
                 </div>
             </div>
             

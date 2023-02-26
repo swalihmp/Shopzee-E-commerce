@@ -89,10 +89,10 @@ DATABASES = {
     "default": {
         'ENGINE':'django.db.backends.postgresql',
         'NAME': 'student',
-        'USER': '#',
-        'PASSWORD': '#',
-        'HOST': '#',
-        'PORT': '#'
+        'USER': 'postgres',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 
@@ -153,6 +153,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_HOST='smtp.gmail.com'
 EMAIL_PORT=587
-EMAIL_HOST_USER='swalihmp8@gmail.com'
-EMAIL_HOST_PASSWORD='shofnprujseqprrh'
+EMAIL_HOST_USER='*'
+EMAIL_HOST_PASSWORD='*'
 EMAIL_USE_TLS=True
