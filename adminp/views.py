@@ -1,12 +1,13 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages,auth
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from accounts.models import Account
 from store.models import Product,Variation,VariationManager,multiimages
 from category.models import Category
 from .models import Slider,Coupon
 import datetime
+from datetime import timedelta
 from orders.models import Payment,Order,OrderProduct
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -39,15 +40,20 @@ def adminpanel(request):
             all_total = all_total+x
             
         all_total = format(all_total, '.3f')
-        
         orders = Order.objects.filter(is_ordered = True).order_by('-id')
         
+    
+        seven_days_ago = date - timedelta(days=7)
+        weakly_order = Order.objects.filter(created_at__gte=seven_days_ago).order_by('-id')
+        
+
         context = {
             'today_count' : today_count,
             'total_count' :total_count,
             'today_total' : today_total,
             'all_total' : all_total,
             'orders':orders,
+            'weakly_order': weakly_order,
         }
         
         return render(request, 'admin/adminpanel.html',context)
@@ -385,7 +391,6 @@ def addcategory(request):
             return render(request,'admin/addcategory.html')
     else:
         return redirect('login')
-    
     
     
 @login_required(login_url = 'login')    
