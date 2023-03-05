@@ -159,7 +159,9 @@
                                         {% for Product in Products %}
                                         <tr>
                                             <td>{{ Product.id }}
-                                            <td><img class="rounded-circle" src={{ Product.images.url }} alt="" style="width: 140px; height: 160px;"></td>
+                                            <td>
+                                                <img class="rounded-circle" src={{ Product.images.url }} alt="" style="width: 140px; height: 160px;">
+                                            </td>
                                             <td>{{ Product.product_name }}</td>
                                             <td>{{ Product.category }}</td>
                                             <td>{{ Product.stock }}</td>

@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from .forms import RegistrationForm
 from .models import Account, UserProfile ,Address
+from store.models import Product
 from cart.models import Cart,Wishlist
 from orders.models import Order,OrderProduct
 from django.contrib import messages,auth
@@ -79,26 +80,48 @@ def activate(request, uidb64, token):
 
 
 def login(request):
-    if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
-        
-        user=auth.authenticate(email=email, password=password)
-        
-        if user is not None:
-            if user.is_admin:
-                auth.login(request,user)
-                return redirect('adminpanel')
+    if request.user.is_authenticated:
+        return redirect('HomePage')
+    else:
+        if request.method == 'POST':
+            email = request.POST['email']
+            password = request.POST['password']
+            
+            user=auth.authenticate(email=email, password=password)
+            
+            if user is not None:
+                if user.is_admin:
+                    auth.login(request,user)
+                    return redirect('adminpanel')
+                else:
+                    auth.login(request,user)
+                    if 'cart' in request.session:
+                        session_cart = request.session['cart']
+                        for id, product_data in session_cart.items():
+                            color = product_data['color']
+                            size = product_data['size']
+                            product = Product.objects.get(id=id)
+                            user = request.user
+                            uid = user.username
+                            
+                            if Cart.objects.filter(product=product,user=uid,color=color,size=size).exists():
+                                auth.login(request,user)
+                                return redirect('HomePage')
+                            else:
+                                Cart.objects.create(product=product,user=uid,color=color,size=size)
+                                auth.login(request,user)
+                                return redirect('HomePage')
+                    else:
+                        auth.login(request,user)
+                        return redirect('HomePage')
             else:
-                auth.login(request,user)
-                return redirect('HomePage')
-        else:
-            messages.error(request, "Invalid Credentials....")
-            return redirect('login')
-    return render(request, 'accounts/login.html')
+                messages.error(request, "Invalid Credentials....")
+                return redirect('login')
+        return render(request, 'accounts/login.html')
 
 @login_required(login_url = 'login')
 def logout(request):
+    request.session.flush()
     auth.logout(request)
     return redirect('HomePage')
 

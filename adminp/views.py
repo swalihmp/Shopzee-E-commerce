@@ -121,31 +121,67 @@ def adminaddproduct(request):
     if request.user.is_superadmin:
         categories=Category.objects.all()
         if request.method == 'POST':
-            product_name = request.POST['product_name']
-            description = request.POST['description']
-            price = request.POST['price']
-            stock = request.POST['stock']
-            images = request.FILES['images']
-            category_id = request.POST['category']
-            category = Category.objects.get(id=category_id)
+            if not request.FILES.get('images'):
+                product_name = request.POST['product_name']
+                description = request.POST['description']
+                price = request.POST['price']
+                stock = request.POST['stock']
+                imgs = request.FILES['image']
+                category_id = request.POST['category']
+                category = Category.objects.get(id=category_id)
+                
+                
+                prod = Product.objects.create(
+                    product_name=product_name,
+                    description=description,
+                    price=price,
+                    images= imgs,
+                    stock=stock,
+                    category=category,
+                )
+                
+                Products=Product.objects.all().order_by('id')
+                prod_count=Products.count()
+                context={
+                    'Products':Products,
+                    'prod_count':prod_count,
+                }
+                return render(request, 'admin/adminproducts.html',context)
             
-            
-            Product.objects.create(
-                product_name=product_name,
-                description=description,
-                price=price,
-                images=images,
-                stock=stock,
-                category=category,
-            )
-            
-            Products=Product.objects.all().order_by('id')
-            prod_count=Products.count()
-            context={
-                'Products':Products,
-                'prod_count':prod_count,
-            }
-            return render(request, 'admin/adminproducts.html',context)
+            else:
+                product_name = request.POST['product_name']
+                description = request.POST['description']
+                price = request.POST['price']
+                stock = request.POST['stock']
+                imgs = request.FILES['image']
+                category_id = request.POST['category']
+                category = Category.objects.get(id=category_id)
+                
+                
+                prod = Product.objects.create(
+                    product_name=product_name,
+                    description=description,
+                    price=price,
+                    images= imgs,
+                    stock=stock,
+                    category=category,
+                )
+                
+                images = request.FILES.getlist('images')
+                for image in images:
+                    multi = multiimages.objects.create(
+                    product = prod,
+                    image=image,
+                )
+
+                
+                Products=Product.objects.all().order_by('id')
+                prod_count=Products.count()
+                context={
+                    'Products':Products,
+                    'prod_count':prod_count,
+                }
+                return render(request, 'admin/adminproducts.html',context)
         else:
             context={
                 'categories':categories
@@ -160,9 +196,11 @@ def adminproducts(request):
     if request.user.is_superadmin:
         Products=Product.objects.all().order_by('id')
         prod_count=Products.count()
+        images = multiimages.objects.all()
         context={
             'Products':Products,
             'prod_count':prod_count,
+            'images':images,
         }
         return render(request, 'admin/adminproducts.html',context)
     else:
@@ -318,13 +356,15 @@ def multipleimages(request):
     if request.user.is_superadmin:
         if request.method == 'POST':
             product = request.POST['product']
-            image = request.FILES['image']
             prod = Product.objects.get(product_name=product)
             
-            multiimages.objects.create(
+            images = request.FILES.getlist('image')
+            for image in images:
+                multiimages.objects.create(
                 product = prod,
-                image = image,
+                image=image,
             )
+                
             products = multiimages.objects.all().order_by('id')
             paginator = Paginator(products,5)
             page = request.GET.get('page')
@@ -447,8 +487,10 @@ def editprod(request,id):
                 )
                 return redirect('adminproducts')
         else:
+            prod = Product.objects.get(id=id)
             context = {
-                'product':Product.objects.get(id=id)
+                'product':Product.objects.get(id=id),
+                'images': multiimages.objects.filter(product = prod)
             }
             return render(request,'admin/editprod.html',context)   
     else:

@@ -85,7 +85,7 @@ def removewish(request,id):
     wishItem.delete()
     return redirect('wishlist') 
 
-
+val = None
 def addtocart(request,id):
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -102,6 +102,14 @@ def addtocart(request,id):
                 Cart.objects.create(product=product,user=uid,color=color,size=size)
                 return redirect('cart')
     else:
+        color = request.POST['color']
+        size = request.POST['size']
+        cart = request.session.get('cart', {})
+        cart[id] = {
+            'color': color,
+            'size': size,
+        }
+        request.session['cart'] = cart
         return redirect('login')
   
 @login_required(login_url = 'login')  
